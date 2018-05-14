@@ -4,7 +4,7 @@ let restaurants,
 var map
 var markers = []
 
-/**
+/*
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchCuisines();
 });
 
-/**
+/*
  * Fetch all neighborhoods and set their HTML.
  */
 fetchNeighborhoods = () => {
@@ -26,7 +26,7 @@ fetchNeighborhoods = () => {
   });
 }
 
-/**
+/*
  * Set neighborhoods HTML.
  */
 fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
@@ -39,7 +39,7 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
   });
 }
 
-/**
+/*
  * Fetch all cuisines and set their HTML.
  */
 fetchCuisines = () => {
@@ -53,7 +53,7 @@ fetchCuisines = () => {
   });
 }
 
-/**
+/*
  * Set cuisines HTML.
  */
 fillCuisinesHTML = (cuisines = self.cuisines) => {
@@ -67,7 +67,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
   });
 }
 
-/**
+/*
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
@@ -83,7 +83,7 @@ window.initMap = () => {
   updateRestaurants();
 }
 
-/**
+/*
  * Update page and map for current restaurants.
  */
 updateRestaurants = () => {
@@ -106,7 +106,7 @@ updateRestaurants = () => {
   })
 }
 
-/**
+/*
  * Clear current restaurants, their HTML and remove their map markers.
  */
 resetRestaurants = (restaurants) => {
@@ -121,7 +121,7 @@ resetRestaurants = (restaurants) => {
   self.restaurants = restaurants;
 }
 
-/**
+/*
  * Create all restaurants HTML and add them to the webpage.
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
@@ -132,7 +132,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   addMarkersToMap();
 }
 
-/**
+/*
  * Create restaurant HTML.
  */
 createRestaurantHTML = (restaurant) => {
@@ -163,7 +163,7 @@ createRestaurantHTML = (restaurant) => {
   return li
 }
 
-/**
+/*
  * Add markers for current restaurants to the map.
  */
 addMarkersToMap = (restaurants = self.restaurants) => {
