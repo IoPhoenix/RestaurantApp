@@ -126,6 +126,7 @@ createReviewHTML = (review) => {
   li.appendChild(date);
 
   const rating = document.createElement('p');
+  rating.classList.add('restaurant-rating');
   rating.innerHTML = `Rating: ${review.rating}`;
   li.appendChild(rating);
 
@@ -143,7 +144,7 @@ fillBreadcrumb = (restaurant=self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
-  li.classList.add('active-link');
+  li.classList.add('active-page');
   breadcrumb.appendChild(li);
 }
 
