@@ -1,4 +1,4 @@
-/* ====================== MIXINS ====================== */
+/* ====================== VARIABLES AND MIXINS ====================== */
 /* ====================== GLOBAL ====================== */
 body, td, th, p {
   font-family: "PT Serif", serif;
@@ -184,7 +184,7 @@ nav h1 a {
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   text-align: center;
-  padding: 1rem;
+  padding: 1.5em;
   height: fit-content;
   background-color: #3397db;
 }
@@ -254,7 +254,7 @@ nav h1 a {
   text-transform: uppercase;
 }
 
-#restaurants-list li a {
+#restaurants-list li button {
   background-color: orange;
   border-bottom: 3px solid #eee;
   color: #ffff;
@@ -266,16 +266,22 @@ nav h1 a {
   text-transform: uppercase;
   width: 100%;
   padding: 13px 0;
+  cursor: pointer;
+}
+
+#restaurants-list li button:hover, #restaurants-list li button:focus {
+  background-color: #3397db;
 }
 
 @media (min-width: 768px) {
-  #restaurants-list li a {
+  #restaurants-list li button {
     padding: 8px 30px 10px;
     width: initial;
   }
 }
 
-#restaurants-list li p {
+#restaurants-list li p, #restaurants-list li address {
+  font-style: inherit;
   margin: 0;
   font-size: 11pt;
 }
@@ -284,7 +290,6 @@ nav h1 a {
   background-color: #ccc;
   display: block;
   margin: 0;
-  min-height: 248px;
 }
 
 /* ====================== Restaurant Details ====================== */

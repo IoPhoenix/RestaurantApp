@@ -1,4 +1,4 @@
-/* ====================== MIXINS ====================== */
+/* ====================== VARIABLES AND MIXINS ====================== */
 
 $roboto: 'Roboto', sans-serif;
 $serif: 'PT Serif', serif;
@@ -194,7 +194,7 @@ nav {
 
 .filter-options {
   text-align: center;
-  padding: 1rem;
+  padding: 1.5em;
   height: fit-content;
   background-color: $lightBlue;
   h2 {
@@ -255,7 +255,7 @@ nav {
       margin: 20px 0 10px;
       text-transform: uppercase;
     }
-    a {
+    button {
       background-color: $orange;
       border-bottom: 3px solid #eee;
       color: $white;
@@ -267,12 +267,17 @@ nav {
       text-transform: uppercase;
       width: 100%;
       padding: 13px 0;
+      cursor: pointer;
+      &:hover, &:focus {
+        background-color: #3397db;
+      }
       @include tablet {
         padding: 8px 30px 10px;
         width: initial;
       }
     }
-    p {
+    p, address {
+      font-style: inherit;
       margin: 0;
       font-size: 11pt;
     }
@@ -283,7 +288,7 @@ nav {
   background-color: $lightGray;
   display: block;
   margin: 0;
-  min-height: 248px;
+  // min-height: 248px;
 }
 
 /* ====================== Restaurant Details ====================== */
