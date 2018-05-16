@@ -6,7 +6,7 @@ $darkGray: #333;
 $lightGray: #ccc;
 $orange: orange;
 $white: #ffff;
-$lightBlue: #3397db;
+$blue: #3397db;
 
 
 @mixin phone {
@@ -62,13 +62,14 @@ a {
         border: none 0px $white;
     }
     &:hover, &:focus {
-        color: #3397db;
+        color: $blue;
         text-decoration: none;
     }
 }
 
 a, button {
   transition: all .3s;
+  cursor: pointer;
 }
 
 h1 {
@@ -87,20 +88,44 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 
 header {
+  position: relative;
   width: 100%;
   background-color: #252831;
-  text-align: center;
   display: flex;
   z-index: 999;
   height: 80px;
+  flex-direction: column;
   align-items: center;
   text-align: center;
+  justify-content: center;
   &.fixed-header {
     position: fixed;
     top: 0;
+    h1 {
+      @include desktop {
+        margin-bottom: 0;
+      }
+    }
   }
   @include tablet {
     height: 100px;
+  }
+  h1 {
+    a {
+      font-family: $roboto;
+      color: $white;
+      font-size: 12pt;
+      font-weight: 500;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      @include phone {
+        font-size: 14pt;
+        letter-spacing: 7px;
+      }
+      @include desktop {
+        font-size: 16pt;
+      }
+    }
   }
 }
 
@@ -138,42 +163,146 @@ header {
 
 /* ====================== Navigation ====================== */
 
-nav {
-  width: 100%;
-  h1 {
-    margin: auto;
-    a {
-      font-family: $roboto;
-      color: $white;
-      font-size: 14pt;
-      font-weight: 500;
-      letter-spacing: 7px;
-      text-transform: uppercase;
-      @include tablet {
-        font-size: 14pt;
+#navbar-toggler {
+    transition: top .3s;
+    height: 48px;
+    width: 48px;
+    padding: .7em;
+    position: absolute;
+    z-index: 1;
+    font-size: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 5px;
+    border: 0;
+    background: 0 0;
+    @include tablet {
+      padding: .5em;
+      left: 20px;
+    }
+    @include desktop {
+      display: none;
+    }
+
+    .navigation-icon {
+      position: relative;
+      display: block;
+      transition: background-color .2s ease .1s;
+      &:after, &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
       }
-      @include desktop {
-        font-size: 18pt;
+      &, &:after, &:before {
+        height: 2px;
+        background-color: #FFF;
+        -webkit-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
       }
+      &:before {
+        top: -9px;
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+        -webkit-transition: top .1s ease .2s,-webkit-transform .2s ease 0s;
+        transition: top .1s ease .2s,-webkit-transform .2s ease 0s;
+        transition: transform .2s ease 0s,top .1s ease .2s;
+        transition: transform .2s ease 0s,top .1s ease .2s,-webkit-transform .2s ease 0s;
+      }
+      &:after {
+        bottom: -9px;
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+        -webkit-transition: bottom .1s ease .2s,-webkit-transform .2s ease 0s;
+        transition: bottom .1s ease .2s,-webkit-transform .2s ease 0s;
+        transition: transform .2s ease 0s,bottom .1s ease .2s;
+        transition: transform .2s ease 0s,bottom .1s ease .2s,-webkit-transform .2s ease 0s;
+      }
+    }
+}
+
+.navbar-toggler-active {
+  -webkit-transition-timing-function: cubic-bezier(.6,-.28,.735,.045);
+  transition-timing-function: cubic-bezier(.6,-.28,.735,.045);
+  margin-top: 0!important;
+  #navbar-toggler .navigation-icon {
+    -webkit-transition-delay: 0s;
+    transition-delay: 0s;
+    background-color: transparent;
+    &:before {
+      top: 0;
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+      -webkit-transition: top .1s ease,-webkit-transform .2s ease .2s;
+      transition: top .1s ease,-webkit-transform .2s ease .2s;
+      transition: top .1s ease, transform .2s ease .2s;
+      transition: top .1s ease, transform .2s ease .2s,-webkit-transform .2s ease .2s;
+    }
+    &:after {
+      bottom: 0;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      -webkit-transition: bottom .1s ease,-webkit-transform .2s ease .2s;
+      transition: bottom .1s ease,-webkit-transform .2s ease .2s;
+      transition: bottom .1s ease, transform .2s ease .2s;
+      transition: bottom .1s ease, transform .2s ease .2s,-webkit-transform .2s ease .2s;
     }
   }
 }
 
+#primary-menu {
+  display: none;
+  padding: 20px;
+  position: absolute;
+  background-color: #f58500;
+  top: 80px;
+  left: 0;
+  right: 0;
+  transition: display .2s ease;
+  @include tablet {
+    top: 100px;
+  }
+  @include desktop {
+    display: block;
+    padding: 0;
+    position: static;
+    background-color: transparent;
+    top: 0;
+    width: 100%;
+  }
+  &.collapsed {
+    display: block;
+  }
+}
+
 #breadcrumb {
+  padding-left: 0;
   list-style: none;
   font-size: 17px;
   margin: 0;
+  @include desktop {
+    margin-top: 10px;
+  }
+
   li {
     display: inline;
+    font-weight: 700;
+    font-size: 11pt;
     &.active-page {
-      color: $lightGray;
+      color: $white;
+      @include desktop {
+        color: #ddd;
+      }
     }
     a {
-      color: #3397db;
+      color: #333;
+      font-size: 11pt;
       text-decoration: none;
       padding: 1.3em .7em;
+      @include desktop {
+        color: #4eaeef;
+      }
       &:hover {
-        color: #01447e;
         text-decoration: underline;
       }
     }
@@ -200,7 +329,7 @@ nav {
   text-align: center;
   padding: 1.5em;
   height: fit-content;
-  background-color: $lightBlue;
+  background-color: $blue;
   h2 {
     color: $white;
     font-weight: normal;
@@ -267,9 +396,8 @@ nav {
       text-transform: uppercase;
       width: 100%;
       padding: 13px 0;
-      cursor: pointer;
       &:hover, &:focus {
-        background-color: #3397db;
+        background-color: $blue;
       }
       @include tablet {
         padding: 8px 30px 10px;

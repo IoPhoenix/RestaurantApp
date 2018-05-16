@@ -41,6 +41,7 @@ a:hover, a:focus {
 
 a, button {
   transition: all .3s;
+  cursor: pointer;
 }
 
 h1 {
@@ -59,14 +60,16 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 
 header {
+  position: relative;
   width: 100%;
   background-color: #252831;
-  text-align: center;
   display: flex;
   z-index: 999;
   height: 80px;
+  flex-direction: column;
   align-items: center;
   text-align: center;
+  justify-content: center;
 }
 
 header.fixed-header {
@@ -74,9 +77,37 @@ header.fixed-header {
   top: 0;
 }
 
+@media (min-width: 992px) {
+  header.fixed-header h1 {
+    margin-bottom: 0;
+  }
+}
+
 @media (min-width: 768px) {
   header {
     height: 100px;
+  }
+}
+
+header h1 a {
+  font-family: "Roboto", sans-serif;
+  color: #ffff;
+  font-size: 12pt;
+  font-weight: 500;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+}
+
+@media (min-width: 480px) {
+  header h1 a {
+    font-size: 14pt;
+    letter-spacing: 7px;
+  }
+}
+
+@media (min-width: 992px) {
+  header h1 a {
+    font-size: 16pt;
   }
 }
 
@@ -118,57 +149,181 @@ header.fixed-header {
 }
 
 /* ====================== Navigation ====================== */
-nav {
-  width: 100%;
-}
-
-nav h1 {
-  margin: auto;
-}
-
-nav h1 a {
-  font-family: "Roboto", sans-serif;
-  color: #ffff;
-  font-size: 14pt;
-  font-weight: 500;
-  letter-spacing: 7px;
-  text-transform: uppercase;
+#navbar-toggler {
+  transition: top .3s;
+  height: 48px;
+  width: 48px;
+  padding: .7em;
+  position: absolute;
+  z-index: 1;
+  font-size: 1em;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 5px;
+  border: 0;
+  background: 0 0;
 }
 
 @media (min-width: 768px) {
-  nav h1 a {
-    font-size: 14pt;
+  #navbar-toggler {
+    padding: .5em;
+    left: 20px;
   }
 }
 
 @media (min-width: 992px) {
-  nav h1 a {
-    font-size: 18pt;
+  #navbar-toggler {
+    display: none;
   }
 }
 
+#navbar-toggler .navigation-icon {
+  position: relative;
+  display: block;
+  transition: background-color .2s ease .1s;
+}
+
+#navbar-toggler .navigation-icon:after, #navbar-toggler .navigation-icon:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+#navbar-toggler .navigation-icon, #navbar-toggler .navigation-icon:after, #navbar-toggler .navigation-icon:before {
+  height: 2px;
+  background-color: #FFF;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+#navbar-toggler .navigation-icon:before {
+  top: -9px;
+  -webkit-transform: rotate(0);
+  transform: rotate(0);
+  -webkit-transition: top .1s ease .2s,-webkit-transform .2s ease 0s;
+  transition: top .1s ease .2s,-webkit-transform .2s ease 0s;
+  transition: transform .2s ease 0s,top .1s ease .2s;
+  transition: transform .2s ease 0s,top .1s ease .2s,-webkit-transform .2s ease 0s;
+}
+
+#navbar-toggler .navigation-icon:after {
+  bottom: -9px;
+  -webkit-transform: rotate(0);
+  transform: rotate(0);
+  -webkit-transition: bottom .1s ease .2s,-webkit-transform .2s ease 0s;
+  transition: bottom .1s ease .2s,-webkit-transform .2s ease 0s;
+  transition: transform .2s ease 0s,bottom .1s ease .2s;
+  transition: transform .2s ease 0s,bottom .1s ease .2s,-webkit-transform .2s ease 0s;
+}
+
+.navbar-toggler-active {
+  -webkit-transition-timing-function: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  transition-timing-function: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  margin-top: 0 !important;
+}
+
+.navbar-toggler-active #navbar-toggler .navigation-icon {
+  -webkit-transition-delay: 0s;
+  transition-delay: 0s;
+  background-color: transparent;
+}
+
+.navbar-toggler-active #navbar-toggler .navigation-icon:before {
+  top: 0;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transition: top .1s ease,-webkit-transform .2s ease .2s;
+  transition: top .1s ease,-webkit-transform .2s ease .2s;
+  transition: top .1s ease, transform .2s ease .2s;
+  transition: top .1s ease, transform .2s ease .2s,-webkit-transform .2s ease .2s;
+}
+
+.navbar-toggler-active #navbar-toggler .navigation-icon:after {
+  bottom: 0;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  -webkit-transition: bottom .1s ease,-webkit-transform .2s ease .2s;
+  transition: bottom .1s ease,-webkit-transform .2s ease .2s;
+  transition: bottom .1s ease, transform .2s ease .2s;
+  transition: bottom .1s ease, transform .2s ease .2s,-webkit-transform .2s ease .2s;
+}
+
+#primary-menu {
+  display: none;
+  padding: 20px;
+  position: absolute;
+  background-color: #f58500;
+  top: 80px;
+  left: 0;
+  right: 0;
+  transition: display .2s ease;
+}
+
+@media (min-width: 768px) {
+  #primary-menu {
+    top: 100px;
+  }
+}
+
+@media (min-width: 992px) {
+  #primary-menu {
+    display: block;
+    padding: 0;
+    position: static;
+    background-color: transparent;
+    top: 0;
+    width: 100%;
+  }
+}
+
+#primary-menu.collapsed {
+  display: block;
+}
+
 #breadcrumb {
+  padding-left: 0;
   list-style: none;
   font-size: 17px;
   margin: 0;
 }
 
+@media (min-width: 992px) {
+  #breadcrumb {
+    margin-top: 10px;
+  }
+}
+
 #breadcrumb li {
   display: inline;
+  font-weight: 700;
+  font-size: 11pt;
 }
 
 #breadcrumb li.active-page {
-  color: #ccc;
+  color: #ffff;
+}
+
+@media (min-width: 992px) {
+  #breadcrumb li.active-page {
+    color: #ddd;
+  }
 }
 
 #breadcrumb li a {
-  color: #3397db;
+  color: #333;
+  font-size: 11pt;
   text-decoration: none;
   padding: 1.3em .7em;
 }
 
+@media (min-width: 992px) {
+  #breadcrumb li a {
+    color: #4eaeef;
+  }
+}
+
 #breadcrumb li a:hover {
-  color: #01447e;
   text-decoration: underline;
 }
 
@@ -266,7 +421,6 @@ nav h1 a {
   text-transform: uppercase;
   width: 100%;
   padding: 13px 0;
-  cursor: pointer;
 }
 
 #restaurants-list li button:hover, #restaurants-list li button:focus {
