@@ -158,7 +158,6 @@ createRestaurantHTML = (restaurant) => {
   const more = document.createElement('button');
   more.innerHTML = 'View Restaurant Details';
   more.addEventListener('click', () => window.location.href = DBHelper.urlForRestaurant(restaurant));
-  // more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more);
   return li;
 }
