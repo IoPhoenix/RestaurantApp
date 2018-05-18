@@ -1,12 +1,13 @@
 /* ====================== VARIABLES AND MIXINS ====================== */
 
-$roboto: 'Roboto', sans-serif;
-$serif: 'PT Serif', serif;
+$story: 'Poor Story', cursive;
+$poppins: 'Poppins', sans-serif;
 $darkGray: #333;
 $lightGray: #ccc;
 $orange: orange;
 $white: #ffff;
 $blue: #137ec7;
+$burgundy: #922123;
 
 
 @mixin phone {
@@ -34,12 +35,12 @@ body,
 td, 
 th, 
 p {
-  font: 400 10pt/1.5 $serif;
+  font: 400 13pt/1.5 $story;
 	color: $darkGray;
 }
 
 body {
-	background-color: #fdfdfd;
+	background-color: #FDF6E8;
 	margin: 0;
 	position: relative;
 }
@@ -51,8 +52,7 @@ img {
 
 ul,
 li {
-	font-family: $serif;
-	font-size: 10pt;
+	font-family: $story;
 	color: $darkGray;
 }
 
@@ -74,18 +74,17 @@ button {
   cursor: pointer;
 }
 
-h1 {
-  font-family: $roboto;
-  font-weight: 500;
+h1, h2 {
+  font-family: $poppins;
+  font-weight: 600;
 }
 
-h2, 
 h3, 
 h4, 
 h5, 
 h6 {
-  font-family: $serif;
-  font-weight: 700;
+  font-family: $story;
+  font-weight: 600;
   margin: 0 0 10px;
 }
 
@@ -118,7 +117,7 @@ header {
   }
   h1 {
     a {
-      font: 500 12pt $roboto;
+      font: 600 12pt $poppins;
       color: $white;
       letter-spacing: 5px;
       text-transform: uppercase;
@@ -134,19 +133,19 @@ header {
 }
 
 #maincontent {
-  background-color: #f3f3f3;
+  background-color: #FDF6E8;
   min-height: 100%;
   display: flex;
   flex-direction: column;
 }
 
 #footer {
-  background-color: #444;
+  background-color: #2E3440;
   letter-spacing: 1px;
   padding: 10px 0;
   text-align: center;
   p {
-    font-size: 8pt;
+    font-size: 10pt;
     line-height: 2.2;
     color: #aaa;
     text-transform: uppercase;
@@ -165,12 +164,12 @@ header {
 }
 
 .sr-only {
-  position:absolute;
-  left:-10000px;
-  top:auto;
-  width:1px;
-  height:1px;
-  overflow:hidden;
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 /* ====================== Navigation ====================== */
@@ -268,7 +267,7 @@ header {
   display: none;
   padding: 20px;
   position: absolute;
-  background-color: #f58500;
+  background-color: $burgundy;
   top: 80px;
   left: 0;
   right: 0;
@@ -284,29 +283,25 @@ header {
     top: 0;
     width: 100%;
   }
-  // &.collapsed {
-  //   display: block;
-  // }
 }
 
 #breadcrumb {
   padding-left: 0;
   list-style: none;
-  font-size: 17px;
   margin: 0;
   @include desktop {
-    margin-top: 10px;
+    margin: 0;
+    margin-bottom: 20px;
   }
 
   li {
     display: inline;
     font-weight: 700;
-    font-size: 11pt;
     a {
-      color: #333;
-      font-size: 11pt;
+      font-size: 15pt;
+      color: #4eaeef;
       text-decoration: none;
-      padding: 1.3em .7em;
+      padding: .5em .4em;
       &.active-page {
         color: $white;
         @include desktop {
@@ -345,14 +340,15 @@ header {
   height: fit-content;
   background-color: $blue;
   h2 {
+    margin-top: 0;
     color: $white;
     font-weight: normal;
   }
   select {
     background-color: $white;
     border: 1px solid $white;
-    font-family: $serif;
-    font-size: 11pt;
+    font-family: $story;
+    font-size: 13pt;
     height: 35px;
     letter-spacing: 0;
     padding: 0 10px;
@@ -382,7 +378,7 @@ header {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  background-color: #f3f3f3;
+  background-color: #FDF6E7;
   list-style: outside none none;
   margin: 0;
   padding: 30px 15px 60px;
@@ -390,20 +386,21 @@ header {
   li {
     background-color: $white;
     border: 2px solid $lightGray;
-    font-family: $serif;
+    font-family: $story;
     margin: 15px;
     min-height: 380px;
     padding: 0 30px 25px;
     text-align: left;
     width: 270px;
     h1 {
-      color: #f18200;
-      font: 500 14pt/1.3 $serif;
+      color: $burgundy;
+      font: 600 15pt/1.3 $story;
       letter-spacing: 0;
       margin: 20px 0 10px;
       text-transform: uppercase;
     }
     button {
+      font-size: 12pt;
       background-color: $orange;
       color: $white;
       margin: 15px 0 0;
@@ -423,7 +420,6 @@ header {
     address {
       font-style: inherit;
       margin: 0;
-      font-size: 11pt;
     }
   }
 }
@@ -462,11 +458,12 @@ header {
 }
 
 #restaurant-name {
-  color: #f18200;
-  font: 20pt/1 $serif;
+  color: $burgundy;
+  font: 600 20pt/1 $story;
   letter-spacing: 0;
   margin: 15px 0 30px;
   text-align: center;
+  text-transform: uppercase;
   @include tablet {
     text-align: left;
   }
@@ -478,8 +475,8 @@ header {
   }
 }
 #restaurant-address {
-  font-size: 12pt;
   margin: 10px 0px;
+  font-style: inherit;
 }
 
 #restaurant-cuisine {
@@ -527,9 +524,10 @@ header {
 #reviews-container {
   padding: 30px 30px 100px;
   h2 {
-    color: #f58500;
+    color: $burgundy;
     font-size: 24pt;
-    font-weight: 300;
+    font-weight: 400;
+    font-family: $story;
     letter-spacing: -1px;
     padding-bottom: 1pt;
   }

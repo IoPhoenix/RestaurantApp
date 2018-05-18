@@ -80,7 +80,10 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
  * Create restaurant operating hours HTML table and add it to the webpage.
  */
 fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
-  const hours = document.getElementById('restaurant-hours');
+  const hoursTable = document.getElementById('restaurant-hours');
+  const tableBody = document.createElement('tbody');
+  hoursTable.appendChild(tableBody);
+
   for (let key in operatingHours) {
     const row = document.createElement('tr');
 
@@ -92,7 +95,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     time.innerHTML = operatingHours[key];
     row.appendChild(time);
 
-    hours.appendChild(row);
+    tableBody.appendChild(row);
   }
 }
 
