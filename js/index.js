@@ -1,17 +1,8 @@
-const body = document.querySelector('body');
-const menu = document.getElementById('primary-menu');
-const navbarToggler = document.getElementById('navbar-toggler');
+const menuToggler = document.getElementById('menu-toggler');
+let isMenuOpen = false;
 
-toggleMenu = () => {
-    console.log('test');
-    if (menu.classList.contains('collapsed')) {
-        body.classList.remove('navbar-toggler-active');
-        menu.classList.remove('collapsed')
-    } else {
-        menu.classList.add('collapsed');
-        body.classList.add('navbar-toggler-active');
-    }
-}
-
-document.getElementById('navbar-toggler').addEventListener('click', toggleMenu);
+menuToggler.addEventListener('click', () => {
+    isMenuOpen = !isMenuOpen;
+    menuToggler.setAttribute('aria-expanded', isMenuOpen);
+});
 
