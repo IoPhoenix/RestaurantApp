@@ -1,13 +1,13 @@
-var dataCacheName = 'restaurant-reviews-app-v1';
+var dataCacheName = 'restaurant-reviews-app-v';
 var filesToCache = [
-    '/',
-    '/index.html',
+    '/RestaurantApp/',
+    '/RestaurantApp/index.html',
     '/restaurant.html',
-    '/data/restaurants.json',
-    '/js/main.js',
-    '/js/dbhelper.js',
-    '/js/restaurant_info.js',
-    '/css/styles.css',
+    '/RestaurantApp/data/restaurants.json',
+    '/RestaurantApp/js/main.js',
+    '/RestaurantApp/js/dbhelper.js',
+    '/RestaurantApp/js/restaurant_info.js',
+    '/RestaurantApp/css/styles.css',
     'images/1-270_thumbnail.jpg',
     'images/1-420_extra-small.jpg',
     'images/1-445_medium.jpg',
