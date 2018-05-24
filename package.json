@@ -10,20 +10,14 @@
     "normalize.css": "^8.0.0"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
-    "babel-preset-env": "^1.7.0",
-    "css-loader": "^0.28.11",
     "grunt": "^1.0.2",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-imagemin": "^2.0.1",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-nodeunit": "^1.0.0",
-    "grunt-contrib-uglify": "^3.3.0",
+    "grunt-contrib-uglify-es": "^3.3.0",
     "grunt-mkdir": "^1.0.0",
-    "grunt-responsive-images": "^1.10.1",
-    "imager.js": "^0.5.1",
-    "style-loader": "^0.21.0"
+    "grunt-responsive-images": "^1.10.1"
   }
 }

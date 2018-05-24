@@ -1,6 +1,13 @@
 module.exports = function(grunt) {
 
     grunt.initConfig({
+      uglify: {
+        my_target: {
+          files: {
+            'js/app.js': ['js/dbhelper.js', 'js/main.js', 'js/restaurant_info.js', 'js/toggleMenu.js']
+          }
+        }
+      },
       imagemin: {
         jpgs: {
             options: {
@@ -73,11 +80,15 @@ module.exports = function(grunt) {
         },
       }
     });
-    
+
+ 
+    grunt.loadNpmTasks('grunt-contrib-uglify-es');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-responsive-images');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-mkdir');
+
+
     grunt.registerTask('default', ['clean', 'mkdir', 'responsive_images', 'imagemin']);
   };  
