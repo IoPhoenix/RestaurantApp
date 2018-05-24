@@ -146,6 +146,9 @@ header {
   letter-spacing: 1px;
   padding: 10px 0;
   text-align: center;
+  @include tablet {
+    position: relative;
+  }
   p {
     font-size: 10pt;
     line-height: 2.2;
@@ -344,7 +347,7 @@ header {
 #restaurants-container {
   @include tablet {
     position: relative;
-    top: 400px;
+    margin-top: 400px;
   }
 }
 

@@ -128,6 +128,12 @@ header h1 a {
   text-align: center;
 }
 
+@media (min-width: 768px) {
+  #footer {
+    position: relative;
+  }
+}
+
 #footer p {
   font-size: 10pt;
   line-height: 2.2;
@@ -357,7 +363,7 @@ header h1 a {
 @media (min-width: 768px) {
   #restaurants-container {
     position: relative;
-    top: 400px;
+    margin-top: 400px;
   }
 }
 
