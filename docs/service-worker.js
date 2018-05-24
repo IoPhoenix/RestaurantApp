@@ -1,4 +1,4 @@
-var dataCacheName = 'restaurant-reviews-app-v5';
+var dataCacheName = 'restaurant-reviews-app-v1';
 var filesToCache = [
     '/',
     '/index.html',
