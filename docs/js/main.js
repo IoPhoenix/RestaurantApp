@@ -181,5 +181,5 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker
            .register('./service-worker.js')
            .then(() => console.log('Service Worker Registered'))
-           .catch(err => console.log('Something went wrong: ', err);
+           .catch(err => console.log('Something went wrong: ', err));
 }
