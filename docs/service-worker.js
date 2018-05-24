@@ -1,13 +1,16 @@
-var dataCacheName = 'restaurant-reviews-app-v2';
+var dataCacheName = 'restaurant-reviews-app-v1';
 var filesToCache = [
     '/RestaurantApp/',
     '/RestaurantApp/index.html',
     '/RestaurantApp/restaurant.html',
+    'https://fonts.googleapis.com/css?family=Poor+Story|Poppins:400,600',
+    '/RestaurantApp/css/styles.min.css',    
     '/RestaurantApp/data/restaurants.json',
     '/RestaurantApp/js/main.js',
     '/RestaurantApp/js/dbhelper.js',
     '/RestaurantApp/js/restaurant_info.js',
-    '/RestaurantApp/css/styles.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css',
+    'https://maps.googleapis.com/maps/api/js?key=AIzaSyAV7dZNt-afI1MX_Qxc5CCDCkGWp_1A3RU&libraries=places&callback=initMap',
     '/RestaurantApp/images/1-270_thumbnail.jpg',
     '/RestaurantApp/images/1-420_extra-small.jpg',
     '/RestaurantApp/images/1-445_medium.jpg',
