@@ -10,7 +10,6 @@ var filesToCache = [
     '/RestaurantApp/js/dbhelper.js',
     '/RestaurantApp/js/restaurant_info.js',
     'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css',
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyAV7dZNt-afI1MX_Qxc5CCDCkGWp_1A3RU&libraries=places&callback=initMap',
     '/RestaurantApp/images/1-270_thumbnail.jpg',
     '/RestaurantApp/images/1-420_extra-small.jpg',
     '/RestaurantApp/images/1-445_medium.jpg',
