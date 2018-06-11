@@ -57,16 +57,18 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   
   const picture = document.getElementById('restaurant-image');
+  const caption = document.getElementById('restaurant-caption');
   const image =
-          `<source media="(min-width: 992px)" srcset="images/${restaurant.id}-580_large_2x.jpg 2x, images/${restaurant.id}-580_large_1x.jpg">
+            `<source media="(min-width: 992px)" srcset="images/${restaurant.id}-580_large_2x.jpg 2x, images/${restaurant.id}-580_large_1x.jpg">
               <source media="(min-width: 768px)" srcset="images/${restaurant.id}-445_medium.jpg 445w">
               <source media="(min-width: 480px)" srcset="images/${restaurant.id}-540_small.jpg 540w">
               <img class="restaurant-img" id="restaurant-img" src="images/${restaurant.id}-420_extra-small.jpg" alt="${restaurant.photograph_description}">`;
 
   picture.innerHTML = image;
+  caption.innerHTML = restaurant.photograph_description;
 
   const cuisine = document.getElementById('restaurant-cuisine');
-  cuisine.innerHTML = restaurant.cuisine_type;
+  cuisine.innerHTML = `Cuisine: ${restaurant.cuisine_type}` ;
 
   // fill operating hours
   if (restaurant.operating_hours) {

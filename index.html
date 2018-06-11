@@ -18,15 +18,16 @@
     </header>
 
     <main id="maincontent">
-      <button class="sr-only">Skip to main content</button>
+      <a href="#restaurants-container" class="sr-only">Skip to main content</a>
       <section id="map-container">
-        <div id="map" aria-label="map"></div>
+        <div id="map" role="application" aria-label="map with markers"></div>
       </section> <!-- / #map-container -->
 
       <section id="restaurants-container">
         <div class="filter-options">
           <h2>Filter Results</h2>
           <form>
+              <label for="neighborhoods-select" class="sr-only">Select neighborhood</label>
               <select 
                 id="neighborhoods-select" 
                 name="neighborhoods" 
@@ -34,6 +35,7 @@
                 onchange="updateRestaurants()">
                   <option value="all">All Neighborhoods</option>
               </select>
+              <label for="cuisines-select" class="sr-only">Select cuisine</label>
               <select 
                 id="cuisines-select" 
                 name="cuisines" 

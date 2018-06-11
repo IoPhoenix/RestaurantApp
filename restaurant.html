@@ -32,15 +32,19 @@
       </nav>
     </header>
 
+    <a href="#restaurant-container" class="sr-only">Skip to main content</a>
 
   <main id="maincontent">
     <section id="map-container">
-        <div id="map" aria-label="map"></div>
+        <div id="map" role="application" aria-label="Map with a restaurant marker"></div>
       </section> <!-- / #map-container -->
 
       <section id="restaurant-container">
         <h1 id="restaurant-name"></h1>
-        <picture id="restaurant-image"></picture>
+        <figure>
+          <picture id="restaurant-image"></picture>
+          <figcaption id="restaurant-caption"></figcaption>
+        </figure>
         <p id="restaurant-cuisine"></p>
         <address id="restaurant-address"></address>
         <table id="restaurant-hours"></table>

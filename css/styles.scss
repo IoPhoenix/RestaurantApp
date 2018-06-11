@@ -152,7 +152,7 @@ header {
   p {
     font-size: 10pt;
     line-height: 2.2;
-    color: #aaa;
+    color: $white;
     text-transform: uppercase;
   }
   a {
@@ -172,8 +172,6 @@ header {
   position: absolute;
   left: -10000px;
   top: auto;
-  width: 1px;
-  height: 1px;
   overflow: hidden;
 }
 
@@ -301,9 +299,10 @@ header {
 
   li {
     display: inline;
-    font-weight: 700;
+    font-weight: normal;
+    font-family: $poppins;
     a {
-      font-size: 15pt;
+      font-size: 12pt;
       color: $blue;
       text-decoration: none;
       padding: .5em .4em;
@@ -352,6 +351,7 @@ header {
 }
 
 .filter-options {
+  position: relative;
   text-align: center;
   padding: 1.5em;
   height: fit-content;
@@ -496,6 +496,15 @@ header {
     width: 90%;
   }
 }
+
+figure {
+  margin: 0;
+}
+
+#restaurant-caption {
+  font-size: 80%;
+}
+
 #restaurant-address {
   margin: 10px 0px;
   font-style: inherit;
@@ -507,7 +516,7 @@ header {
   font-size: 12pt;
   font-weight: 300;
   letter-spacing: 10px;
-  margin: 0 0 20px;
+  margin: 20px 0;
   padding: 2px 0;
   text-align: center;
   text-transform: uppercase;

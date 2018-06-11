@@ -7,7 +7,7 @@ var filesToCache = [
     '/js/main.js',
     '/js/dbhelper.js',
     '/js/restaurant_info.js',
-    '/css/styles.css',
+    '/css/styles.min.css', 
     'images/1-270_thumbnail.jpg',
     'images/1-420_extra-small.jpg',
     'images/1-445_medium.jpg',
@@ -104,6 +104,7 @@ self.addEventListener('activate', function(e) {
 
 // intercept requests made from the app 
 self.addEventListener('fetch', function(e) {
+
   // The app is asking for app shell files. In this scenario the app uses the
   // "Cache, falling back to the network" offline strategy
   e.respondWith(
