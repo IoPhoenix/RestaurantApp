@@ -1,5 +1,5 @@
-var dataCacheName = 'restaurant-reviews-app-v1';
-var filesToCache = [
+const dataCacheName = 'restaurant-reviews-app-v2';
+const filesToCache = [
     '/',
     '/index.html',
     '/restaurant.html',
@@ -104,12 +104,31 @@ self.addEventListener('activate', function(e) {
 
 // intercept requests made from the app 
 self.addEventListener('fetch', function(e) {
-
-  // The app is asking for app shell files. In this scenario the app uses the
-  // "Cache, falling back to the network" offline strategy
   e.respondWith(
-      caches.match(e.request).then(function(response) {
-        return response || fetch(e.request);
+    // look at the request and find any cached results from the caches SW created
+    caches.match(e.request)
+      .then(function(response) {
+        // return cache value if match is found:
+        if (response) return response;
+
+        // if not, handle the result of a call to fetch:
+        const clonedRequest = e.request.clone();
+
+        return fetch(clonedRequest).then(
+          function(response) {
+            // check that response is valid:
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // cache the cloned response:
+            const responseToCache = response.clone();
+            caches.open(dataCacheName).then(cache => cache.put(e.request, responseToCache));
+
+            // return repsonse after caching it:
+            return response;
+          }
+        );
       })
     );
 });
