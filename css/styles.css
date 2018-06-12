@@ -436,7 +436,7 @@ header h1 a {
   width: 270px;
 }
 
-#restaurants-list li h1 {
+#restaurants-list li h3 {
   color: #922123;
   font: 600 15pt/1.3 "Poor Story", cursive;
   letter-spacing: 0;
