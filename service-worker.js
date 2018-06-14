@@ -1,13 +1,15 @@
-const dataCacheName = 'restaurant-reviews-app-v2';
+const dataCacheName = 'restaurant-reviews-app-v4';
 const filesToCache = [
     '/',
     '/index.html',
     '/restaurant.html',
-    '/data/restaurants.json',
-    '/js/main.js',
-    '/js/dbhelper.js',
-    '/js/restaurant_info.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css',
+    'https://fonts.googleapis.com/css?family=Poor+Story|Poppins:400,600',
     '/css/styles.min.css', 
+    '/data/restaurants.json',
+    '/js/dbhelper.js',
+    '/js/main.js',
+    '/js/restaurant_info.js',
     'images/1-270_thumbnail.jpg',
     'images/1-420_extra-small.jpg',
     'images/1-445_medium.jpg',
