@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Restaurant Reviews App, single restaurant page" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Poor+Story|Poppins:400,600" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles/styles.min.css">
+    <title>Restaurant Details</title>
+  </head>
+
+  <body class="inside">
+
+    <header class="fixed-header">
+      <h1><a href="/">Restaurant Reviews</a></h1>
+
+      <!-- Collapse button -->
+      <button 
+        aria-label="Navigation"
+        id="menu-toggler"
+        aria-haspopup="true" 
+        aria-expanded="false" 
+        aria-controls="menu">
+          <span class="navigation-icon"></span>
+      </button>
+      
+      <nav id="primary-menu">
+        <ul id="breadcrumb" >
+          <li><a href="/">Home</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <a href="#restaurant-container" class="sr-only">Skip to main content</a>
+
+  <main id="maincontent">
+    <section id="map-container">
+        <div id="map" role="application" aria-label="Map with a restaurant marker"></div>
+      </section> <!-- / #map-container -->
+
+     <section id="restaurant-container">
+        <h2 id="restaurant-name"></h2>
+        <figure> 
+          <picture id="restaurant-image"></picture>
+          <figcaption id="restaurant-caption"></figcaption>
+        </figure>
+        <p id="restaurant-cuisine"></p>
+        <address id="restaurant-address"></address>
+        <table id="restaurant-hours"></table>
+      </section> <!-- / #restaurant-container -->
+    
+      <section id="reviews-container">
+        <ul id="reviews-list"></ul>
+      </section> <!-- / #reviews-container -->
+    </main>
+
+    <footer id="footer" class="absolute-positioned">
+      <p>Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reдed.</p>
+    </footer>
+
+    <script src="assets/scripts/dbhelper.js"></script>
+    <script src="assets/scripts/restaurant_info.js"></script>
+    <script src="assets/scripts/toggleMenu.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLmGaCd5PYGe3GWoLO1Qo_myVirNcvHO0&libraries=places&callback=initMap"></script>
+  </body>
+</html>
