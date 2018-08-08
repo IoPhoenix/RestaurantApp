@@ -1,9 +1,10 @@
-const gulp = require('gulp');
+const gulp = require('gulp'),
+    sass = require('gulp-sass');
 
 
 gulp.task('styles', function() {
-    const pathsToCopy = [
-        './app/assets/styles/styles.min.css'
-    ];
-    return gulp.src(pathsToCopy).pipe(gulp.dest('./app/temp/styles'));
+    return gulp.src('./app/assets/styles/*.scss')
+            .pipe(sass.sync().on('error', sass.logError))
+            .pipe(sass({ outputStyle: 'compressed' }))
+            .pipe(gulp.dest('./app/temp/assets/styles'));
 });

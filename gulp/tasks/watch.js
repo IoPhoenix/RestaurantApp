@@ -17,8 +17,8 @@ gulp.task('watch', function() {
            browserSync.reload();
         });
     
-        watch('./app/assets/styles/**/*.css', function() {
-            gulp.start('cssInject');
+        watch('./app/assets/styles/*.scss', function() {
+            gulp.start('cssInject');            
         });
 
         // produce new images of different sizes if originals change:
@@ -35,7 +35,7 @@ gulp.task('watch', function() {
     // inject css to html without reloading
     // when styles task run and complete
     gulp.task('cssInject', ['styles'], function() {
-        return gulp.src('./app/assets/styles/styles.css')
+        return gulp.src('./app/temp/styles/styles.css')
                     .pipe(browserSync.stream());
     });
 

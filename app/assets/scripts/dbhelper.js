@@ -157,3 +157,5 @@ class DBHelper {
     return marker;
   }
 }
+
+export default DBHelper;
