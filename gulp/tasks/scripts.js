@@ -1,36 +1,28 @@
 const gulp = require('gulp'),
     del = require('del'),
-    concat = require('gulp-concat'),
-    minify = require('gulp-minify');
+    concat = require('gulp-concat');
 
-    // remove previous version of minified js
-    gulp.task('deleteMinifiedScripts', function() {
-        return del(['./app/assets/scripts/app.min.js', './app/assets/scripts/restaurant.min.js']);
-    });
+// remove previous versions of js files
+gulp.task('deleteMainScript', function() {
+    return del('./app/temp/scripts/app.js');
+});
 
-    gulp.task('minifyRestaurantScript', ['deleteMinifiedScripts'], function() {
-        return gulp.src(['./app/assets/scripts/dbhelper.js', './app/assets/scripts/restaurant_info.js', './app/assets/scripts/toggleMenu.js'])
-        .pipe(concat('restaurant.js'))
-          .pipe(minify({
-            ext:{
-                min:'.min.js'
-            },
-            noSource: true
-          }))
-          .pipe(gulp.dest('./app/assets/scripts/'))
-      });
+gulp.task('deleteRestaurantScript', function() {
+    return del('./app/temp/scripts/restaurant.js');
+});
 
 
-    gulp.task('scripts', ['minifyRestaurantScript'], function() {
-        return gulp.src(['./app/assets/scripts/dbhelper.js', './app/assets/scripts/main.js'])
-        .pipe(concat('app.js'))
-          .pipe(minify({
-            ext:{
-                min:'.min.js'
-            },
-            noSource: true
-          }))
-          .pipe(gulp.dest('./app/assets/scripts/'))
-      });
+gulp.task('concatRestaurantScripts', ['deleteRestaurantScript'], function() {
+    return gulp.src(['./app/assets/scripts/dbhelper.js', './app/assets/scripts/restaurant_info.js', './app/assets/scripts/toggleMenu.js'])
+    .pipe(concat('restaurant.js'))
+    .pipe(gulp.dest('./app/temp/scripts'))
+});
 
-   
+
+gulp.task('concatMainScripts', ['deleteMainScript'], function() {
+    return gulp.src(['./app/assets/scripts/dbhelper.js', './app/assets/scripts/main.js'])
+    .pipe(concat('app.js'))
+    .pipe(gulp.dest('./app/temp/scripts'))
+});
+
+gulp.task('scripts', ['concatRestaurantScripts', 'concatMainScripts']);

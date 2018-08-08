@@ -21,29 +21,29 @@ gulp.task('watch', function() {
             gulp.start('cssInject');
         });
 
-        watch('./app/assets/scripts/**/*.js', function() {
-            gulp.start('scriptsRefresh');
-        });
-
         // produce new images of different sizes if originals change:
         watch('./img/*.jpg', function() {
             gulp.start('imagesRefresh');
+        });
+
+        watch('./app/assets/scripts/**/*.js', function() {
+            gulp.start('scriptsRefresh');
         });
     });
     
     
     // inject css to html without reloading
     // when styles task run and complete
-    gulp.task('cssInject', function() {
+    gulp.task('cssInject', ['styles'], function() {
         return gulp.src('./app/assets/styles/styles.css')
                     .pipe(browserSync.stream());
     });
 
 
-    gulp.task('scriptsRefresh', ['scripts'], function() {
+    gulp.task('imagesRefresh', ['responsive_images'], function() {
         browserSync.reload();
     });
 
-    gulp.task('imagesRefresh', ['optimizeImages'], function() {
+    gulp.task('scriptsRefresh', ['scripts'], function() {
         browserSync.reload();
-    });
+    })

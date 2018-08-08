@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="description" content="Restaurant Reviews App, home page" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
     <link href="https://fonts.googleapis.com/css?family=Poor+Story|Poppins:400,600" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles/styles.min.css">
+
+    <!-- build:css assets/styles/styles.css -->
+    <link rel="stylesheet" href="temp/styles/styles.min.css">
+      <!-- endbuild -->
     <title>Restaurant Reviews App</title>
   </head>
 
@@ -53,8 +55,9 @@
       <p>Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.</p>
     </footer>
 
-    <!-- minified js -->
-    <script src="assets/scripts/app.min.js"></script>
+    <!-- build:js assets/scripts/app.js -->
+    <script src="/temp/scripts/app.js"></script>
+    <!-- endbuild -->
     
     <!-- Google Maps API -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLmGaCd5PYGe3GWoLO1Qo_myVirNcvHO0&libraries=places&callback=initMap"></script>

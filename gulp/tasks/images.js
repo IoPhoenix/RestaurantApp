@@ -1,15 +1,15 @@
 const gulp = require('gulp'),
     responsiveImages = require('gulp-responsive'),
-    del = require('del'),
-    imagemin = require('gulp-imagemin');
+    imagemin = require('gulp-imagemin'),
+    del = require('del');
     
 
 gulp.task('deleteImagesFolder', function() {
-    return del('./dist/images/');
+    return del('assets/images');
 });
 
 // create images of different sizes and quality:
-gulp.task('responsive_image', ['deleteImagesFolder'], function() {
+gulp.task('responsive_images', ['deleteImagesFolder'], function() {
     return gulp.src('./img/*.{png,jpg}')
     .pipe(responsiveImages({
         // Resize JPG images to different sizes:
@@ -44,15 +44,8 @@ gulp.task('responsive_image', ['deleteImagesFolder'], function() {
             // Strip all metadata
             withMetadata: false,
           }))
-        .pipe(gulp.dest('./app/assets/images/'));
-});
-
-// optimize images:
-gulp.task('optimizeImages', ['responsive_image'], function() {
-    return gulp.src(['./app/assets/images/*'])
-                .pipe(imagemin([
-                    imagemin.jpegtran({progressive: true}),
-                    imagemin.optipng({optimizationLevel: 5})
-                ]))
-                .pipe(gulp.dest('./app/assets/images'));
+        .pipe(imagemin([
+            imagemin.jpegtran({progressive: true})
+        ]))
+        .pipe(gulp.dest('assets/images/'));
 });
