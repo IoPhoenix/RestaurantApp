@@ -1,4 +1,5 @@
-/* ====================== VARIABLES AND MIXINS ====================== */
+@import url('https://fonts.googleapis.com/css?family=Poor+Story|Poppins:400,600');
+
 
 $story: 'Poor Story', cursive;
 $poppins: 'Poppins', sans-serif;
@@ -9,6 +10,8 @@ $orange: orange;
 $white: #ffff;
 $blue: #4d90fe;
 $burgundy: #922123;
+
+
 
 
 @mixin phone {
