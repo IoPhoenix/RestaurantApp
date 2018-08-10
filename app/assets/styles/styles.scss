@@ -1,8 +1,28 @@
-@import url('https://fonts.googleapis.com/css?family=Poor+Story|Poppins:400,600');
+@font-face {
+  font-family: 'Poor Story';
+  font-display: fallback;
+  font-style: normal;
+  font-weight: 400;
+  src: local('Poor Story Regular'), local('PoorStory-Regular'), url(https://fonts.gstatic.com/s/poorstory/v4/jizfREFUsnUct9P6cDfd0O6tKA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-display: fallback;
+  font-style: normal;
+  font-weight: 400;
+  src: local('Poppins Regular'), local('Poppins-Regular'), url(https://fonts.gstatic.com/s/poppins/v5/pxiEyp8kv8JHgFVrJJfedw.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-display: fallback;
+  font-style: normal;
+  font-weight: 600;
+  src: local('Poppins SemiBold'), local('Poppins-SemiBold'), url(https://fonts.gstatic.com/s/poppins/v5/pxiByp8kv8JHgFVrLEj6Z1xlEA.ttf) format('truetype');
+}
 
 
-$story: 'Poor Story', cursive;
-$poppins: 'Poppins', sans-serif;
+$story: 'Poor Story',  Helvetica, cursive;
+$poppins: 'Poppins', Helvetica, sans-serif;
 $defaultDark: #222;
 $darkGray: #333;
 $lightGray: #ccc;

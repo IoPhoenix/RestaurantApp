@@ -1,11 +1,14 @@
 
+import idb from 'idb';
+
 // register service worker
-// if ('serviceWorker' in navigator) {
-//   navigator.serviceWorker
-//     .register('./service-worker.js')
-//     .then(() => console.log('Service Worker Registered'))
-//     .catch(err => console.log('ServiceWorker registration failed: ', err));
-// }
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('./sw.js')
+    .then(() => console.log('Service Worker Registered'))
+    .catch(err => console.log('ServiceWorker registration failed: ', err));
+}
+
 
 /* Common database helper functions. */
 class DBHelper {
@@ -14,14 +17,28 @@ class DBHelper {
    static async fetchRestaurants(callback) {
     const port = 1337; // Change this to your server port
 
-  try {
-      const data = await fetch(`http://localhost:${port}/restaurants`);
-      const json = await data.json();
-      callback(null, json);
-    } catch(err) {
-      callback(err, null);
+    try {
+        const data = await fetch(`http://localhost:${port}/restaurants`);
+        const json = await data.json();
+        if (callback) callback(null, json);
+        // return data so it can be used and stored in service worker:
+        return json;
+      } catch(err) {
+        
+         // if app is offline, fetch restaurants from the IndexedDB database:
+        idb.open('restaurants', 1).then(function(db) {
+          const tx = db.transaction(['restaurants'], 'readonly');
+          const store = tx.objectStore('restaurants');
+          return store.getAll();
+        }).then(function(restaurants) {
+            console.log('Data read from idb: ', restaurants);
+            if (callback) callback(null, restaurants);
+        }).catch(error => {
+          if (callback) callback(error, null);
+        });
+      }
     }
-  }
+
 
   /* Fetch a restaurant by its ID. */
   static fetchRestaurantById(id, callback) {
@@ -140,7 +157,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`assets/images/${restaurant.id}_thumbnail.jpg`);
+    return (`assets/images/${restaurant.id}_thumbnail.webp`);
   }
 
   /**

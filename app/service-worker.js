@@ -1,8 +1,95 @@
+import DBHelper from './assets/scripts/dbhelper';
+import idb from 'idb';
+
 const dataCacheName = 'restaurant-reviews-app-v0';
-// cache everything in the app folder
 const filesToCache = [
-    '/'
+    '/',
+    'index.html',
+    'restaurant.html',
+    'temp/assets/styles/styles.css', 
+    'temp/assets/scripts/app.js',
+    'temp/assets/scripts/restaurant.js',
+    'https://fonts.gstatic.com/s/poppins/v5/pxiByp8kv8JHgFVrLEj6Z1xlEA.ttf',
+    'assets/images/1_thumbnail.webp',
+    'assets/images/1_extra-small.webp',
+    'assets/images/1_medium.webp',
+    'assets/images/1_small.webp',
+    'assets/images/1_large_1x.webp',
+    'assets/images/1_large_2x.webp',
+    'assets/images/2_thumbnail.webp',
+    'assets/images/2_extra-small.webp',
+    'assets/images/2_medium.webp',
+    'assets/images/2_small.webp',
+    'assets/images/2_large_1x.webp',
+    'assets/images/2_large_2x.webp',
+    'assets/images/3_thumbnail.webp',
+    'assets/images/3_extra-small.webp',
+    'assets/images/3_medium.webp',
+    'assets/images/3_small.webp',
+    'assets/images/3_large_1x.webp',
+    'assets/images/3_large_2x.webp',
+    'assets/images/4_thumbnail.webp',
+    'assets/images/4_extra-small.webp',
+    'assets/images/4_medium.webp',
+    'assets/images/4_small.webp',
+    'assets/images/4_large_1x.webp',
+    'assets/images/4_large_2x.webp',
+    'assets/images/5_thumbnail.webp',
+    'assets/images/5_extra-small.webp',
+    'assets/images/5_medium.webp',
+    'assets/images/5_small.webp',
+    'assets/images/5_large_1x.webp',
+    'assets/images/5_large_2x.webp',
+    'assets/images/6_thumbnail.webp',
+    'assets/images/6_extra-small.webp',
+    'assets/images/6_medium.webp',
+    'assets/images/6_small.webp',
+    'assets/images/6_large_1x.webp',
+    'assets/images/6_large_2x.webp',
+    'assets/images/7_thumbnail.webp',
+    'assets/images/7_extra-small.webp',
+    'assets/images/7_medium.webp',
+    'assets/images/7_small.webp',
+    'assets/images/7_large_1x.webp',
+    'assets/images/7_large_2x.webp',
+    'assets/images/8_thumbnail.webp',
+    'assets/images/8_extra-small.webp',
+    'assets/images/8_medium.webp',
+    'assets/images/8_small.webp',
+    'assets/images/8_large_1x.webp',
+    'assets/images/8_large_2x.webp',
+    'assets/images/9_thumbnail.webp',
+    'assets/images/9_extra-small.webp',
+    'assets/images/9_medium.webp',
+    'assets/images/9_small.webp',
+    'assets/images/9_large_1x.webp',
+    'assets/images/9_large_2x.webp',
+    'assets/images/10_thumbnail.webp',
+    'assets/images/10_extra-small.webp',
+    'assets/images/10_medium.webp',
+    'assets/images/10_small.webp',
+    'assets/images/10_large_1x.webp',
+    'assets/images/10_large_2x.webp'
 ];
+
+// create new database to hold info fetched from the server:
+function createDB() {
+  const dbPromise = idb.open('restaurants', 1, function(upgradeDB) {
+    upgradeDB.createObjectStore('restaurants');
+  });
+
+  DBHelper.fetchRestaurants().then(data => {
+      dbPromise.then(function(db) {
+        const tx = db.transaction('restaurants', 'readwrite');
+        const restaurantsStore = tx.objectStore('restaurants');
+        
+        data.forEach(r => restaurantsStore.put(r, r.id));
+        return tx.cemplete;
+      })
+      .then(console.log('Added restaurants info to idb!'))
+      .catch(err => console.log('Could not add restaurants to idb: ', err));
+  })
+}
 
 
 self.addEventListener('install', function(e) {
@@ -20,6 +107,8 @@ self.addEventListener('install', function(e) {
 self.addEventListener('activate', function(e) {
   console.log('[ServiceWorker] Activate');
   e.waitUntil(
+    createDB(),
+
     caches.keys().then(function(keyList) {
       return Promise.all(keyList.map(function(key) {
           // update cache whenever any of the app shell files change 

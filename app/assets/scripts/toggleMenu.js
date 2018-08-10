@@ -7,8 +7,8 @@ class ToggleMenu {
 
     toggleMenu() {
         this.menuToggler.addEventListener('click', () => {
-            isMenuOpen = !isMenuOpen;
-            this.menuToggler.setAttribute('aria-expanded', isMenuOpen);
+            this.isMenuOpen = !this.isMenuOpen;
+            this.menuToggler.setAttribute('aria-expanded', this.isMenuOpen);
         });
     }
 }

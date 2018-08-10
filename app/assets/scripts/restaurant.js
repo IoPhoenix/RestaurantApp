@@ -1,6 +1,7 @@
 import ToggleMenu from './toggleMenu';
 import DBHelper from './dbhelper';
 
+
 class Restaurant {
   constructor() {
     this.restaurant;
@@ -44,10 +45,10 @@ fillRestaurantHTML(restaurant = this.restaurant) {
   const picture = document.getElementById('restaurant-image');
   const caption = document.getElementById('restaurant-caption');
   const image =
-            `<source media="(min-width: 992px)" srcset="assets/images/${restaurant.id}_large_2x.jpg 2x, assets/images/${restaurant.id}_large_1x.jpg">
-              <source media="(min-width: 768px)" srcset="assets/images/${restaurant.id}_medium.jpg 445w">
-              <source media="(min-width: 480px)" srcset="assets/images/${restaurant.id}_small.jpg 540w">
-              <img class="restaurant-img" id="restaurant-img" src="assets/images/${restaurant.id}_extra-small.jpg" alt="Photo of ${restaurant.name} restaurant">`;
+            `<source media="(min-width: 992px)" srcset="assets/images/${restaurant.id}_large_2x.webp 2x, assets/images/${restaurant.id}_large_1x.webp">
+              <source media="(min-width: 768px)" srcset="assets/images/${restaurant.id}_medium.webp 445w">
+              <source media="(min-width: 480px)" srcset="assets/images/${restaurant.id}_small.webp 540w">
+              <img class="restaurant-img" id="restaurant-img" src="assets/images/${restaurant.id}_extra-small.webp" alt="Photo of ${restaurant.name} restaurant">`;
 
   picture.innerHTML = image;
   caption.innerHTML =  `Photo of ${restaurant.name}`;
@@ -151,20 +152,23 @@ fillBreadcrumb(restaurant=this.restaurant) {
  * Get a parameter by name from page URL.
  */
 getParameterByName(name, url) {
-  if (!url)
-    url = window.location.href;
-  name = name.replace(/[\[\]]/g, '\\$&');
-  const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
-    results = regex.exec(url);
-  if (!results)
-    return null;
-  if (!results[2])
-    return '';
-  return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
+    if (!url)
+      url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
+      results = regex.exec(url);
+    if (!results)
+      return null;
+    if (!results[2])
+      return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
 }
 
 const singleRestaurant = new Restaurant();
+const newMenu = new ToggleMenu();
+newMenu.toggleMenu();
+
 
 /** Initialize Google map, called from HTML. */
 window.initMap = () => {

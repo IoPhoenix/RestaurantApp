@@ -51,14 +51,17 @@ module.exports = {
 	},
 	plugins: [new UglifyJSPlugin()],
 
+	// Set the output paths as the entry key
+	// use the name as output template
 	entry: {
-		app: './app/assets/scripts/app.js',
-		restaurant: './app/assets/scripts/restaurant.js'
+		'temp/assets/scripts/app': './app/assets/scripts/app.js',
+		'temp/assets/scripts/restaurant': './app/assets/scripts/restaurant.js',
+		'sw': './app/service-worker.js'
 	},
 
 	output: {
 		filename: '[name].js',
-		path: path.resolve(__dirname, './app/temp/assets/scripts/')
+		path: path.resolve(__dirname, './app')
 	},
 
 	mode: 'development'

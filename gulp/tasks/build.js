@@ -1,6 +1,5 @@
 const gulp = require('gulp'),
     imagemin = require('gulp-imagemin'),
-    imageminWebp = require('imagemin-webp'),
     del = require('del'),
     usemin = require('gulp-usemin'),
     rev = require('gulp-rev'),
@@ -30,6 +29,7 @@ gulp.task('copyGeneralFiles', ['deleteBuildFolder'], function() {
         './app/**/*',
          '!./app/index.html',
          '!./app/restaurant.html',
+         '!./app/service-worker.js',
          '!./app/assets/images/**',
          '!./app/assets/styles/**',
          '!./app/assets/scripts/**',
@@ -43,13 +43,15 @@ gulp.task('copyGeneralFiles', ['deleteBuildFolder'], function() {
 // optimize images:
 gulp.task('optimizeImages', ['deleteBuildFolder'], function() {
     return gulp.src(['./app/assets/images/*'])
-                .pipe(imagemin([
-                    imagemin.jpegtran({progressive: true}),
-                ]))
+                // .pipe(imagemin([
+                //     webp({
+                //         quality: 75
+                //     })
+                // ]))
+                // .pipe(extReplace(".webp"))
                 .pipe(gulp.dest('./build/assets/images'));
+
 });
-
-
 
 
 gulp.task('useminTrigger', ['deleteBuildFolder'], function() {
@@ -71,4 +73,6 @@ gulp.task('usemin', ['styles', 'scripts'], function() {
                 .pipe(gulp.dest('./build'));
 });
 
-gulp.task('build', ['deleteBuildFolder', 'copyGeneralFiles', 'jpgToWebp', 'useminTrigger']);
+
+
+gulp.task('build', ['deleteBuildFolder', 'copyGeneralFiles', 'optimizeImages', 'useminTrigger']);

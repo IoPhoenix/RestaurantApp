@@ -26,7 +26,7 @@ gulp.task('watch', function() {
             gulp.start('imagesRefresh');
         });
 
-        watch('./app/assets/scripts/**/*.js', function() {
+        watch(['./app/assets/scripts/**/*.js', './app/service-worker.js'], function() {
             gulp.start('scriptsRefresh');
         });
     });
