@@ -1,13 +1,714 @@
-!function(e){var n={};function r(t){if(n[t])return n[t].exports;var a=n[t]={i:t,l:!1,exports:{}};return e[t].call(a.exports,a,a.exports,r),a.l=!0,a.exports}r.m=e,r.c=n,r.d=function(e,n,t){r.o(e,n)||Object.defineProperty(e,n,{enumerable:!0,get:t})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,n){if(1&n&&(e=r(e)),8&n)return e;if(4&n&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(r.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&n&&"string"!=typeof e)for(var a in e)r.d(t,a,function(n){return e[n]}.bind(null,a));return t},r.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(n,"a",n),n},r.o=function(e,n){return Object.prototype.hasOwnProperty.call(e,n)},r.p="",r(r.s="./app/assets/scripts/restaurant.js")}({"./app/assets/scripts/dbhelper.js":
-/*!****************************************!*\
-  !*** ./app/assets/scripts/dbhelper.js ***!
-  \****************************************/
-/*! exports provided: default */function(module,__webpack_exports__,__webpack_require__){"use strict";eval("__webpack_require__.r(__webpack_exports__);\n\r\n// register service worker\r\n// if ('serviceWorker' in navigator) {\r\n//   navigator.serviceWorker\r\n//     .register('./service-worker.js')\r\n//     .then(() => console.log('Service Worker Registered'))\r\n//     .catch(err => console.log('ServiceWorker registration failed: ', err));\r\n// }\r\n\r\n/* Common database helper functions. */\r\nclass DBHelper {\r\n\r\n  /* Fetch all restaurants from the server.*/\r\n   static async fetchRestaurants(callback) {\r\n    const port = 1337; // Change this to your server port\r\n\r\n  try {\r\n      const data = await fetch(`http://localhost:${port}/restaurants`);\r\n      const json = await data.json();\r\n      callback(null, json);\r\n    } catch(err) {\r\n      callback(err, null);\r\n    }\r\n  }\r\n\r\n  /* Fetch a restaurant by its ID. */\r\n  static fetchRestaurantById(id, callback) {\r\n    // fetch all restaurants with proper error handling.\r\n    DBHelper.fetchRestaurants((error, restaurants) => {\r\n      if (error) {\r\n        callback(error, null);\r\n      } else {\r\n        const restaurant = restaurants.find(r => r.id == id);\r\n        if (restaurant) { // Got the restaurant\r\n          callback(null, restaurant);\r\n        } else { // Restaurant does not exist in the database\r\n          callback('Restaurant does not exist', null);\r\n        }\r\n      }\r\n    });\r\n  }\r\n\r\n  /**\r\n   * Fetch restaurants by a cuisine type with proper error handling.\r\n   */\r\n  static fetchRestaurantByCuisine(cuisine, callback) {\r\n    // Fetch all restaurants  with proper error handling\r\n    DBHelper.fetchRestaurants((error, restaurants) => {\r\n      if (error) {\r\n        callback(error, null);\r\n      } else {\r\n        // Filter restaurants to have only given cuisine type\r\n        const results = restaurants.filter(r => r.cuisine_type == cuisine);\r\n        callback(null, results);\r\n      }\r\n    });\r\n  }\r\n\r\n  /**\r\n   * Fetch restaurants by a neighborhood with proper error handling.\r\n   */\r\n  static fetchRestaurantByNeighborhood(neighborhood, callback) {\r\n    // Fetch all restaurants\r\n    DBHelper.fetchRestaurants((error, restaurants) => {\r\n      if (error) {\r\n        callback(error, null);\r\n      } else {\r\n        // Filter restaurants to have only given neighborhood\r\n        const results = restaurants.filter(r => r.neighborhood == neighborhood);\r\n        callback(null, results);\r\n      }\r\n    });\r\n  }\r\n\r\n  /**\r\n   * Fetch restaurants by a cuisine and a neighborhood with proper error handling.\r\n   */\r\n  static fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, callback) {\r\n    // Fetch all restaurants\r\n    DBHelper.fetchRestaurants((error, restaurants) => {\r\n      if (error) {\r\n        callback(error, null);\r\n      } else {\r\n        let results = restaurants\r\n        if (cuisine != 'all') { // filter by cuisine\r\n          results = results.filter(r => r.cuisine_type == cuisine);\r\n        }\r\n        if (neighborhood != 'all') { // filter by neighborhood\r\n          results = results.filter(r => r.neighborhood == neighborhood);\r\n        }\r\n        callback(null, results);\r\n      }\r\n    });\r\n  }\r\n\r\n  /**\r\n   * Fetch all neighborhoods with proper error handling.\r\n   */\r\n  static fetchNeighborhoods(callback) {\r\n    // Fetch all restaurants\r\n    DBHelper.fetchRestaurants((error, restaurants) => {\r\n      if (error) {\r\n        callback(error, null);\r\n      } else {\r\n        // Get all neighborhoods from all restaurants\r\n        const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)\r\n        // Remove duplicates from neighborhoods\r\n        const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)\r\n        callback(null, uniqueNeighborhoods);\r\n      }\r\n    });\r\n  }\r\n\r\n  /**\r\n   * Fetch all cuisines with proper error handling.\r\n   */\r\n  static fetchCuisines(callback) {\r\n    // Fetch all restaurants\r\n    DBHelper.fetchRestaurants((error, restaurants) => {\r\n      if (error) {\r\n        callback(error, null);\r\n      } else {\r\n        // Get all cuisines from all restaurants\r\n        const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type)\r\n        // Remove duplicates from cuisines\r\n        const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i)\r\n        callback(null, uniqueCuisines);\r\n      }\r\n    });\r\n  }\r\n\r\n  /**\r\n   * Restaurant page URL.\r\n   */\r\n  static urlForRestaurant(restaurant) {\r\n    return (`./restaurant.html?id=${restaurant.id}`);\r\n  }\r\n\r\n  /**\r\n   * Restaurant image URL.\r\n   */\r\n  static imageUrlForRestaurant(restaurant) {\r\n    return (`assets/images/${restaurant.id}_thumbnail.jpg`);\r\n  }\r\n\r\n  /**\r\n   * Map marker for a restaurant.\r\n   */\r\n  static mapMarkerForRestaurant(restaurant, map) {\r\n    const marker = new google.maps.Marker({\r\n      position: restaurant.latlng,\r\n      title: restaurant.name,\r\n      url: DBHelper.urlForRestaurant(restaurant),\r\n      map: map,\r\n      animation: google.maps.Animation.DROP}\r\n    );\r\n    return marker;\r\n  }\r\n}\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (DBHelper);\n\n//# sourceURL=webpack:///./app/assets/scripts/dbhelper.js?")},"./app/assets/scripts/restaurant.js":
-/*!******************************************!*\
-  !*** ./app/assets/scripts/restaurant.js ***!
-  \******************************************/
-/*! no exports provided */function(module,__webpack_exports__,__webpack_require__){"use strict";eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _toggleMenu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toggleMenu */ \"./app/assets/scripts/toggleMenu.js\");\n/* harmony import */ var _dbhelper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dbhelper */ \"./app/assets/scripts/dbhelper.js\");\n\n\n\nclass Restaurant {\n  constructor() {\n    this.restaurant;\n    this.singleRestaurantMap;\n  }\n\n/* Get current restaurant from page URL.*/\nfetchRestaurantFromURL(callback) {\n  if (this.restaurant) { // restaurant already fetched!\n    callback(null, this.restaurant)\n    return;\n  }\n  const id = this.getParameterByName('id');\n  if (!id) { // no id found in URL\n    error = 'No restaurant id in URL'\n    callback(error, null);\n  } else {\n    _dbhelper__WEBPACK_IMPORTED_MODULE_1__[\"default\"].fetchRestaurantById(id, (error, restaurant) => {\n      this.restaurant = restaurant;\n      if (!restaurant) {\n        console.error(error);\n        return;\n      }\n      this.fillRestaurantHTML();\n      callback(null, restaurant)\n    });\n  }\n}\n\n/**\n * Create restaurant HTML and add it to the webpage\n */\nfillRestaurantHTML(restaurant = this.restaurant) {\n  const name = document.getElementById('restaurant-name');\n  name.innerHTML = restaurant.name;\n\n  const address = document.getElementById('restaurant-address');\n  address.innerHTML = restaurant.address;\n\n  \n  const picture = document.getElementById('restaurant-image');\n  const caption = document.getElementById('restaurant-caption');\n  const image =\n            `<source media=\"(min-width: 992px)\" srcset=\"assets/images/${restaurant.id}_large_2x.jpg 2x, assets/images/${restaurant.id}_large_1x.jpg\">\n              <source media=\"(min-width: 768px)\" srcset=\"assets/images/${restaurant.id}_medium.jpg 445w\">\n              <source media=\"(min-width: 480px)\" srcset=\"assets/images/${restaurant.id}_small.jpg 540w\">\n              <img class=\"restaurant-img\" id=\"restaurant-img\" src=\"assets/images/${restaurant.id}_extra-small.jpg\" alt=\"Photo of ${restaurant.name} restaurant\">`;\n\n  picture.innerHTML = image;\n  caption.innerHTML =  `Photo of ${restaurant.name}`;\n\n  const cuisine = document.getElementById('restaurant-cuisine');\n  cuisine.innerHTML = `Cuisine: ${restaurant.cuisine_type}` ;\n\n  // fill operating hours\n  if (restaurant.operating_hours) {\n    this.fillRestaurantHoursHTML();\n  }\n  // fill reviews\n  this.fillReviewsHTML();\n}\n\n/**\n * Create restaurant operating hours HTML table and add it to the webpage.\n */\nfillRestaurantHoursHTML(operatingHours = this.restaurant.operating_hours) {\n  const hoursTable = document.getElementById('restaurant-hours');\n  const tableBody = document.createElement('tbody');\n  hoursTable.appendChild(tableBody);\n\n  for (let key in operatingHours) {\n    const row = document.createElement('tr');\n\n    const day = document.createElement('td');\n    day.innerHTML = key;\n    row.appendChild(day);\n\n    const time = document.createElement('td');\n    time.innerHTML = operatingHours[key];\n    row.appendChild(time);\n\n    tableBody.appendChild(row);\n  }\n}\n\n/**\n * Create all reviews HTML and add them to the webpage.\n */\nfillReviewsHTML(reviews = this.restaurant.reviews) {\n  const container = document.getElementById('reviews-container');\n  const title = document.createElement('h2');\n  title.innerHTML = 'Reviews';\n  container.appendChild(title);\n\n  if (!reviews) {\n    const noReviews = document.createElement('p');\n    noReviews.innerHTML = 'No reviews yet!';\n    container.appendChild(noReviews);\n    return;\n  }\n  const ul = document.getElementById('reviews-list');\n  reviews.forEach(review => {\n    ul.appendChild(this.createReviewHTML(review));\n  });\n  container.appendChild(ul);\n}\n\n/**\n * Create review HTML and add it to the webpage.\n */\ncreateReviewHTML(review) {\n  const li = document.createElement('li');\n  const name = document.createElement('h3');\n  name.innerHTML = review.name;\n  li.appendChild(name);\n\n  const date = document.createElement('em');\n  date.innerHTML = review.date;\n  li.appendChild(date);\n\n  const rating = document.createElement('p');\n  rating.classList.add('restaurant-rating');\n  rating.innerHTML = `Rating: ${review.rating}`;\n  li.appendChild(rating);\n\n  const comments = document.createElement('p');\n  comments.innerHTML = review.comments;\n  li.appendChild(comments);\n\n  return li;\n}\n\n/**\n * Add restaurant name to the breadcrumb navigation menu\n */\nfillBreadcrumb(restaurant=this.restaurant) {\n  const breadcrumb = document.getElementById('breadcrumb');\n  const li = document.createElement('li');\n  const link = document.createElement('a');\n  link.innerHTML = restaurant.name;\n  link.href = window.location.href;\n  link.classList.add('active-page');\n  li.appendChild(link);\n  breadcrumb.appendChild(li);\n}\n\n/**\n * Get a parameter by name from page URL.\n */\ngetParameterByName(name, url) {\n  if (!url)\n    url = window.location.href;\n  name = name.replace(/[\\[\\]]/g, '\\\\$&');\n  const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),\n    results = regex.exec(url);\n  if (!results)\n    return null;\n  if (!results[2])\n    return '';\n  return decodeURIComponent(results[2].replace(/\\+/g, ' '));\n}\n}\n\nconst singleRestaurant = new Restaurant();\n\n/** Initialize Google map, called from HTML. */\nwindow.initMap = () => {\n  singleRestaurant.fetchRestaurantFromURL((error, restaurant) => {\n    if (error) { // Got an error!\n      console.error(error);\n    } else {\n      singleRestaurant.singleRestaurantMap = new google.maps.Map(document.getElementById('map'), {\n        zoom: 16,\n        center: restaurant.latlng,\n        scrollwheel: false\n      });\n      singleRestaurant.fillBreadcrumb();\n      _dbhelper__WEBPACK_IMPORTED_MODULE_1__[\"default\"].mapMarkerForRestaurant(singleRestaurant.restaurant, singleRestaurant.singleRestaurantMap);\n    }\n  });\n}\n\n//# sourceURL=webpack:///./app/assets/scripts/restaurant.js?")},"./app/assets/scripts/toggleMenu.js":
-/*!******************************************!*\
-  !*** ./app/assets/scripts/toggleMenu.js ***!
-  \******************************************/
-/*! exports provided: default */function(module,__webpack_exports__,__webpack_require__){"use strict";eval("__webpack_require__.r(__webpack_exports__);\n// toggle menu on smaller screens\nclass ToggleMenu {\n    constructor() {\n        this.menuToggler = document.getElementById('menu-toggler');\n        this.isMenuOpen = false;\n    }\n\n    toggleMenu() {\n        this.menuToggler.addEventListener('click', () => {\n            isMenuOpen = !isMenuOpen;\n            this.menuToggler.setAttribute('aria-expanded', isMenuOpen);\n        });\n    }\n}\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (ToggleMenu);\n\n//# sourceURL=webpack:///./app/assets/scripts/toggleMenu.js?")}});
+'use strict';
+
+(function() {
+  function toArray(arr) {
+    return Array.prototype.slice.call(arr);
+  }
+
+  function promisifyRequest(request) {
+    return new Promise(function(resolve, reject) {
+      request.onsuccess = function() {
+        resolve(request.result);
+      };
+
+      request.onerror = function() {
+        reject(request.error);
+      };
+    });
+  }
+
+  function promisifyRequestCall(obj, method, args) {
+    var request;
+    var p = new Promise(function(resolve, reject) {
+      request = obj[method].apply(obj, args);
+      promisifyRequest(request).then(resolve, reject);
+    });
+
+    p.request = request;
+    return p;
+  }
+
+  function promisifyCursorRequestCall(obj, method, args) {
+    var p = promisifyRequestCall(obj, method, args);
+    return p.then(function(value) {
+      if (!value) return;
+      return new Cursor(value, p.request);
+    });
+  }
+
+  function proxyProperties(ProxyClass, targetProp, properties) {
+    properties.forEach(function(prop) {
+      Object.defineProperty(ProxyClass.prototype, prop, {
+        get: function() {
+          return this[targetProp][prop];
+        },
+        set: function(val) {
+          this[targetProp][prop] = val;
+        }
+      });
+    });
+  }
+
+  function proxyRequestMethods(ProxyClass, targetProp, Constructor, properties) {
+    properties.forEach(function(prop) {
+      if (!(prop in Constructor.prototype)) return;
+      ProxyClass.prototype[prop] = function() {
+        return promisifyRequestCall(this[targetProp], prop, arguments);
+      };
+    });
+  }
+
+  function proxyMethods(ProxyClass, targetProp, Constructor, properties) {
+    properties.forEach(function(prop) {
+      if (!(prop in Constructor.prototype)) return;
+      ProxyClass.prototype[prop] = function() {
+        return this[targetProp][prop].apply(this[targetProp], arguments);
+      };
+    });
+  }
+
+  function proxyCursorRequestMethods(ProxyClass, targetProp, Constructor, properties) {
+    properties.forEach(function(prop) {
+      if (!(prop in Constructor.prototype)) return;
+      ProxyClass.prototype[prop] = function() {
+        return promisifyCursorRequestCall(this[targetProp], prop, arguments);
+      };
+    });
+  }
+
+  function Index(index) {
+    this._index = index;
+  }
+
+  proxyProperties(Index, '_index', [
+    'name',
+    'keyPath',
+    'multiEntry',
+    'unique'
+  ]);
+
+  proxyRequestMethods(Index, '_index', IDBIndex, [
+    'get',
+    'getKey',
+    'getAll',
+    'getAllKeys',
+    'count'
+  ]);
+
+  proxyCursorRequestMethods(Index, '_index', IDBIndex, [
+    'openCursor',
+    'openKeyCursor'
+  ]);
+
+  function Cursor(cursor, request) {
+    this._cursor = cursor;
+    this._request = request;
+  }
+
+  proxyProperties(Cursor, '_cursor', [
+    'direction',
+    'key',
+    'primaryKey',
+    'value'
+  ]);
+
+  proxyRequestMethods(Cursor, '_cursor', IDBCursor, [
+    'update',
+    'delete'
+  ]);
+
+  // proxy 'next' methods
+  ['advance', 'continue', 'continuePrimaryKey'].forEach(function(methodName) {
+    if (!(methodName in IDBCursor.prototype)) return;
+    Cursor.prototype[methodName] = function() {
+      var cursor = this;
+      var args = arguments;
+      return Promise.resolve().then(function() {
+        cursor._cursor[methodName].apply(cursor._cursor, args);
+        return promisifyRequest(cursor._request).then(function(value) {
+          if (!value) return;
+          return new Cursor(value, cursor._request);
+        });
+      });
+    };
+  });
+
+  function ObjectStore(store) {
+    this._store = store;
+  }
+
+  ObjectStore.prototype.createIndex = function() {
+    return new Index(this._store.createIndex.apply(this._store, arguments));
+  };
+
+  ObjectStore.prototype.index = function() {
+    return new Index(this._store.index.apply(this._store, arguments));
+  };
+
+  proxyProperties(ObjectStore, '_store', [
+    'name',
+    'keyPath',
+    'indexNames',
+    'autoIncrement'
+  ]);
+
+  proxyRequestMethods(ObjectStore, '_store', IDBObjectStore, [
+    'put',
+    'add',
+    'delete',
+    'clear',
+    'get',
+    'getAll',
+    'getKey',
+    'getAllKeys',
+    'count'
+  ]);
+
+  proxyCursorRequestMethods(ObjectStore, '_store', IDBObjectStore, [
+    'openCursor',
+    'openKeyCursor'
+  ]);
+
+  proxyMethods(ObjectStore, '_store', IDBObjectStore, [
+    'deleteIndex'
+  ]);
+
+  function Transaction(idbTransaction) {
+    this._tx = idbTransaction;
+    this.complete = new Promise(function(resolve, reject) {
+      idbTransaction.oncomplete = function() {
+        resolve();
+      };
+      idbTransaction.onerror = function() {
+        reject(idbTransaction.error);
+      };
+      idbTransaction.onabort = function() {
+        reject(idbTransaction.error);
+      };
+    });
+  }
+
+  Transaction.prototype.objectStore = function() {
+    return new ObjectStore(this._tx.objectStore.apply(this._tx, arguments));
+  };
+
+  proxyProperties(Transaction, '_tx', [
+    'objectStoreNames',
+    'mode'
+  ]);
+
+  proxyMethods(Transaction, '_tx', IDBTransaction, [
+    'abort'
+  ]);
+
+  function UpgradeDB(db, oldVersion, transaction) {
+    this._db = db;
+    this.oldVersion = oldVersion;
+    this.transaction = new Transaction(transaction);
+  }
+
+  UpgradeDB.prototype.createObjectStore = function() {
+    return new ObjectStore(this._db.createObjectStore.apply(this._db, arguments));
+  };
+
+  proxyProperties(UpgradeDB, '_db', [
+    'name',
+    'version',
+    'objectStoreNames'
+  ]);
+
+  proxyMethods(UpgradeDB, '_db', IDBDatabase, [
+    'deleteObjectStore',
+    'close'
+  ]);
+
+  function DB(db) {
+    this._db = db;
+  }
+
+  DB.prototype.transaction = function() {
+    return new Transaction(this._db.transaction.apply(this._db, arguments));
+  };
+
+  proxyProperties(DB, '_db', [
+    'name',
+    'version',
+    'objectStoreNames'
+  ]);
+
+  proxyMethods(DB, '_db', IDBDatabase, [
+    'close'
+  ]);
+
+  // Add cursor iterators
+  // TODO: remove this once browsers do the right thing with promises
+  ['openCursor', 'openKeyCursor'].forEach(function(funcName) {
+    [ObjectStore, Index].forEach(function(Constructor) {
+      // Don't create iterateKeyCursor if openKeyCursor doesn't exist.
+      if (!(funcName in Constructor.prototype)) return;
+
+      Constructor.prototype[funcName.replace('open', 'iterate')] = function() {
+        var args = toArray(arguments);
+        var callback = args[args.length - 1];
+        var nativeObject = this._store || this._index;
+        var request = nativeObject[funcName].apply(nativeObject, args.slice(0, -1));
+        request.onsuccess = function() {
+          callback(request.result);
+        };
+      };
+    });
+  });
+
+  // polyfill getAll
+  [Index, ObjectStore].forEach(function(Constructor) {
+    if (Constructor.prototype.getAll) return;
+    Constructor.prototype.getAll = function(query, count) {
+      var instance = this;
+      var items = [];
+
+      return new Promise(function(resolve) {
+        instance.iterateCursor(query, function(cursor) {
+          if (!cursor) {
+            resolve(items);
+            return;
+          }
+          items.push(cursor.value);
+
+          if (count !== undefined && items.length == count) {
+            resolve(items);
+            return;
+          }
+          cursor.continue();
+        });
+      });
+    };
+  });
+
+  var exp = {
+    open: function(name, version, upgradeCallback) {
+      var p = promisifyRequestCall(indexedDB, 'open', [name, version]);
+      var request = p.request;
+
+      if (request) {
+        request.onupgradeneeded = function(event) {
+          if (upgradeCallback) {
+            upgradeCallback(new UpgradeDB(request.result, event.oldVersion, request.transaction));
+          }
+        };
+      }
+
+      return p.then(function(db) {
+        return new DB(db);
+      });
+    },
+    delete: function(name) {
+      return promisifyRequestCall(indexedDB, 'deleteDatabase', [name]);
+    }
+  };
+
+  if (typeof module !== 'undefined') {
+    module.exports = exp;
+    module.exports.default = module.exports;
+  }
+  else {
+    self.idb = exp;
+  }
+}());
+/**
+ * Common database helper functions.
+ */
+
+ // register service worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('./service-worker.js')
+      .then(() => console.log('Service Worker Registered'))
+      .catch(err => console.log('ServiceWorker registration failed: ', err));
+}
+
+const createDB = () => {
+    const dbPromise = idb.open('restaurants', 1, function(upgradeDB) {
+      upgradeDB.createObjectStore('restaurants');
+    }).then(console.log('Database created!'));
+
+    return dbPromise;
+}
+ 
+class DBHelper {
+
+    /**
+     * Database URL.
+     * Change this to restaurants.json file location on your server.
+     */
+    static get DATABASE_URL() {
+      const port = 1337; // Change this to your server port
+      return `http://localhost:${port}/restaurants`;
+    }
+  
+    /**
+     * Fetch all restaurants.
+     */
+    static async fetchRestaurants(callback) {
+      try {
+        const data = await fetch(DBHelper.DATABASE_URL);
+        const json = await data.json();
+        console.log('Data from server: ', json);
+        callback(null, json);
+
+        // if data is successfully returned from the server
+        // and the database does not exist, create new database and
+        // store data in it
+        createDB().then(function(db) {
+              const tx = db.transaction('restaurants', 'readwrite');
+              const restaurantsStore = tx.objectStore('restaurants');
+              
+              json.forEach(r => restaurantsStore.put(r, r.id));
+              return tx.cemplete;
+        })
+        .then(console.log('Added restaurants info to idb!'))
+        .catch(err => console.log('Could not add restaurants to idb: ', err));
+
+
+      } catch(err) {
+        // callback(err, null);
+
+         // if app is offline, fetch restaurants from the IndexedDB database:
+        idb.open('restaurants', 1).then(function(db) {
+          const tx = db.transaction(['restaurants'], 'readonly');
+          const store = tx.objectStore('restaurants');
+          return store.getAll();
+        }).then(function(restaurants) {
+            console.log('Data read from idb: ', restaurants);
+           callback(null, restaurants);
+        }).catch(error => callback(error, null));
+      }
+    }
+  
+    /**
+     * Fetch a restaurant by its ID.
+     */
+    static fetchRestaurantById(id, callback) {
+      // fetch all restaurants with proper error handling.
+      DBHelper.fetchRestaurants((error, restaurants) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          const restaurant = restaurants.find(r => r.id == id);
+          if (restaurant) { // Got the restaurant
+            callback(null, restaurant);
+          } else { // Restaurant does not exist in the database
+            callback('Restaurant does not exist', null);
+          }
+        }
+      });
+    }
+  
+    /**
+     * Fetch restaurants by a cuisine type with proper error handling.
+     */
+    static fetchRestaurantByCuisine(cuisine, callback) {
+      // Fetch all restaurants  with proper error handling
+      DBHelper.fetchRestaurants((error, restaurants) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          // Filter restaurants to have only given cuisine type
+          const results = restaurants.filter(r => r.cuisine_type == cuisine);
+          callback(null, results);
+        }
+      });
+    }
+  
+    /**
+     * Fetch restaurants by a neighborhood with proper error handling.
+     */
+    static fetchRestaurantByNeighborhood(neighborhood, callback) {
+      // Fetch all restaurants
+      DBHelper.fetchRestaurants((error, restaurants) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          // Filter restaurants to have only given neighborhood
+          const results = restaurants.filter(r => r.neighborhood == neighborhood);
+          callback(null, results);
+        }
+      });
+    }
+  
+    /**
+     * Fetch restaurants by a cuisine and a neighborhood with proper error handling.
+     */
+    static fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, callback) {
+      // Fetch all restaurants
+      DBHelper.fetchRestaurants((error, restaurants) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          let results = restaurants
+          if (cuisine != 'all') { // filter by cuisine
+            results = results.filter(r => r.cuisine_type == cuisine);
+          }
+          if (neighborhood != 'all') { // filter by neighborhood
+            results = results.filter(r => r.neighborhood == neighborhood);
+          }
+          callback(null, results);
+        }
+      });
+    }
+  
+    /**
+     * Fetch all neighborhoods with proper error handling.
+     */
+    static fetchNeighborhoods(callback) {
+      // Fetch all restaurants
+      DBHelper.fetchRestaurants((error, restaurants) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          // Get all neighborhoods from all restaurants
+          const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)
+          // Remove duplicates from neighborhoods
+          const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
+          callback(null, uniqueNeighborhoods);
+        }
+      });
+    }
+  
+    /**
+     * Fetch all cuisines with proper error handling.
+     */
+    static fetchCuisines(callback) {
+      // Fetch all restaurants
+      DBHelper.fetchRestaurants((error, restaurants) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          // Get all cuisines from all restaurants
+          const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type)
+          // Remove duplicates from cuisines
+          const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i)
+          callback(null, uniqueCuisines);
+        }
+      });
+    }
+  
+    /**
+     * Restaurant page URL.
+     */
+    static urlForRestaurant(restaurant) {
+      return (`./restaurant.html?id=${restaurant.id}`);
+    }
+  
+    /**
+     * Restaurant image URL.
+     */
+    static imageUrlForRestaurant(restaurant) {
+      return (`assets/images/${restaurant.id}_thumbnail.webp`);
+    }
+  
+    /**
+     * Map marker for a restaurant.
+     */
+    //  static mapMarkerForRestaurant(restaurant, map) {
+    //   // https://leafletjs.com/reference-1.3.0.html#marker  
+    //   const marker = L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
+    //     {title: restaurant.name,
+    //     alt: restaurant.name,
+    //     url: DBHelper.urlForRestaurant(restaurant)
+    //     })
+    //     marker.addTo(newMap);
+    //   return marker;
+    // } 
+   static mapMarkerForRestaurant(restaurant, map) {
+      const marker = new google.maps.Marker({
+        position: restaurant.latlng,
+        title: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant),
+        map: map,
+        animation: google.maps.Animation.DROP}
+      );
+      return marker;
+    }
+  
+  }
+let restaurant;
+var newMap;
+
+
+window.initMap = () => {
+  fetchRestaurantFromURL((error, restaurant) => {
+    if (error) { // Got an error!
+      console.error(error);
+    } else {
+      self.map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 16,
+        center: restaurant.latlng,
+        scrollwheel: false
+      });
+      fillBreadcrumb();
+      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+    }
+  });
+}
+
+/**
+ * Get current restaurant from page URL.
+ */
+const fetchRestaurantFromURL = (callback) => {
+  if (self.restaurant) { // restaurant already fetched!
+    callback(null, self.restaurant)
+    return;
+  }
+  const id = getParameterByName('id');
+  if (!id) { // no id found in URL
+    error = 'No restaurant id in URL'
+    callback(error, null);
+  } else {
+    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+      self.restaurant = restaurant;
+      if (!restaurant) {
+        console.error(error);
+        return;
+      }
+      fillRestaurantHTML();
+      callback(null, restaurant)
+    });
+  }
+}
+
+/**
+ * Create restaurant HTML and add it to the webpage
+ */
+const fillRestaurantHTML = (restaurant = self.restaurant) => {
+  const name = document.getElementById('restaurant-name');
+  name.innerHTML = restaurant.name;
+
+  const address = document.getElementById('restaurant-address');
+  address.innerHTML = restaurant.address;
+
+  const picture = document.getElementById('restaurant-image');
+  const caption = document.getElementById('restaurant-caption');
+  const image =
+            `<source media="(min-width: 992px)" srcset="assets/images/${restaurant.id}_large_2x.webp 2x, assets/images/${restaurant.id}_large_1x.webp">
+              <source media="(min-width: 768px)" srcset="assets/images/${restaurant.id}_medium.webp 445w">
+              <source media="(min-width: 480px)" srcset="assets/images/${restaurant.id}_small.webp 540w">
+              <img class="restaurant-img" id="restaurant-img" src="assets/images/${restaurant.id}_extra-small.webp" alt="Photo of ${restaurant.name} restaurant">`;
+
+  picture.innerHTML = image;
+  caption.innerHTML =  `Photo of ${restaurant.name}`;
+
+  const cuisine = document.getElementById('restaurant-cuisine');
+  cuisine.innerHTML = restaurant.cuisine_type;
+
+  // fill operating hours
+  if (restaurant.operating_hours) {
+    fillRestaurantHoursHTML();
+  }
+  // fill reviews
+  fillReviewsHTML();
+}
+
+/**
+ * Create restaurant operating hours HTML table and add it to the webpage.
+ */
+const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
+  const hours = document.getElementById('restaurant-hours');
+  for (let key in operatingHours) {
+    const row = document.createElement('tr');
+
+    const day = document.createElement('td');
+    day.innerHTML = key;
+    row.appendChild(day);
+
+    const time = document.createElement('td');
+    time.innerHTML = operatingHours[key];
+    row.appendChild(time);
+
+    hours.appendChild(row);
+  }
+}
+
+/**
+ * Create all reviews HTML and add them to the webpage.
+ */
+const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+  const container = document.getElementById('reviews-container');
+  const title = document.createElement('h2');
+  title.innerHTML = 'Reviews';
+  container.appendChild(title);
+
+  if (!reviews) {
+    const noReviews = document.createElement('h2');
+    noReviews.innerHTML = 'No reviews yet!';
+    container.appendChild(noReviews);
+    return;
+  }
+  const ul = document.getElementById('reviews-list');
+  reviews.forEach(review => {
+    ul.appendChild(createReviewHTML(review));
+  });
+  container.appendChild(ul);
+}
+
+/**
+ * Create review HTML and add it to the webpage.
+ */
+const createReviewHTML = (review) => {
+    const li = document.createElement('li');
+    const name = document.createElement('h3');
+    name.innerHTML = review.name;
+    li.appendChild(name);
+
+    const date = document.createElement('em');
+    date.innerHTML = review.date;
+    li.appendChild(date);
+
+    const rating = document.createElement('p');
+    rating.classList.add('restaurant-rating');
+    rating.innerHTML = `Rating: ${review.rating}`;
+    li.appendChild(rating);
+
+    const comments = document.createElement('p');
+    comments.innerHTML = review.comments;
+    li.appendChild(comments);
+    
+    return li;
+}
+
+/**
+ * Add restaurant name to the breadcrumb navigation menu
+ */
+const fillBreadcrumb = (restaurant=self.restaurant) => {
+  const breadcrumb = document.getElementById('breadcrumb');
+  const li = document.createElement('li');
+  const link = document.createElement('a');
+  link.innerHTML = restaurant.name;
+  link.href = window.location.href;
+  link.classList.add('active-page');
+  li.appendChild(link);
+  breadcrumb.appendChild(li);
+}
+
+/**
+ * Get a parameter by name from page URL.
+ */
+const getParameterByName = (name, url) => {
+  if (!url)
+    url = window.location.href;
+  name = name.replace(/[\[\]]/g, '\\$&');
+  const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
+    results = regex.exec(url);
+  if (!results)
+    return null;
+  if (!results[2])
+    return '';
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+// toggle menu on smaller screens
+    const menuToggler = document.getElementById('menu-toggler');
+    let isMenuOpen = false;
+
+    menuToggler.addEventListener('click', () => {
+        isMenuOpen = !isMenuOpen;
+        menuToggler.setAttribute('aria-expanded', isMenuOpen);
+    });
