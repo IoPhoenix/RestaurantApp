@@ -39,22 +39,20 @@ class DBHelper {
         console.log('Data from server: ', json);
         callback(null, json);
 
-        // if data is successfully returned from the server
-        // and the database does not exist, create new database and
-        // store data in it
+        // if data is successfully returned from the server,
+        // create new database and store data in it
         createDB().then(function(db) {
-              const tx = db.transaction('restaurants', 'readwrite');
-              const restaurantsStore = tx.objectStore('restaurants');
-              
-              json.forEach(r => restaurantsStore.put(r, r.id));
-              return tx.cemplete;
+            const tx = db.transaction('restaurants', 'readwrite');
+            const restaurantsStore = tx.objectStore('restaurants');
+            
+            json.forEach(r => restaurantsStore.put(r, r.id));
+            return tx.cemplete;
         })
         .then(console.log('Added restaurants info to idb!'))
         .catch(err => console.log('Could not add restaurants to idb: ', err));
 
 
       } catch(err) {
-        // callback(err, null);
 
          // if app is offline, fetch restaurants from the IndexedDB database:
         idb.open('restaurants', 1).then(function(db) {
@@ -190,28 +188,17 @@ class DBHelper {
       return (`assets/images/${restaurant.id}_thumbnail.webp`);
     }
   
-    /**
-     * Map marker for a restaurant.
-     */
-    //  static mapMarkerForRestaurant(restaurant, map) {
-    //   // https://leafletjs.com/reference-1.3.0.html#marker  
-    //   const marker = L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
-    //     {title: restaurant.name,
-    //     alt: restaurant.name,
-    //     url: DBHelper.urlForRestaurant(restaurant)
-    //     })
-    //     marker.addTo(newMap);
-    //   return marker;
-    // } 
-   static mapMarkerForRestaurant(restaurant, map) {
-      const marker = new google.maps.Marker({
-        position: restaurant.latlng,
-        title: restaurant.name,
-        url: DBHelper.urlForRestaurant(restaurant),
-        map: map,
-        animation: google.maps.Animation.DROP}
-      );
-      return marker;
-    }
-  
-  }
+ /**
+   * Map marker for a restaurant.
+   */
+  static mapMarkerForRestaurant(restaurant, map) {
+    // https://leafletjs.com/reference-1.3.0.html#marker  
+    const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
+      {title: restaurant.name,
+      alt: restaurant.name,
+      url: DBHelper.urlForRestaurant(restaurant)
+      })
+      marker.addTo(self.newMap);
+    return marker;
+  } 
+}
