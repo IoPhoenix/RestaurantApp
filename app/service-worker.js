@@ -4,6 +4,7 @@ const filesToCache = [
     '/',
     'index.html',
     'restaurant.html',
+    'manifest.json',
     'temp/assets/styles/styles.css', 
     'temp/assets/scripts/app.js',
     'temp/assets/scripts/restaurant.js',
