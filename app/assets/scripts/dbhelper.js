@@ -9,14 +9,6 @@ if ('serviceWorker' in navigator) {
       .then(() => console.log('Service Worker Registered'))
       .catch(err => console.log('ServiceWorker registration failed: ', err));
 }
-
-const createDB = () => {
-    const dbPromise = idb.open('restaurants', 1, function(upgradeDB) {
-      upgradeDB.createObjectStore('restaurants');
-    }).then(console.log('Database created!'));
-
-    return dbPromise;
-}
  
 class DBHelper {
 
@@ -41,7 +33,11 @@ class DBHelper {
 
         // if data is successfully returned from the server,
         // create new database and store data in it
-        createDB().then(function(db) {
+        const dbPromise = idb.open('restaurants', 1, function(upgradeDB) {
+          upgradeDB.createObjectStore('restaurants');
+        }).then(console.log('Database created!'));
+
+        dbPromise.then(function(db) {
             const tx = db.transaction('restaurants', 'readwrite');
             const restaurantsStore = tx.objectStore('restaurants');
             
