@@ -1,3 +1,10 @@
+# Steps to compile the project (stage 2):
+-run 'npm install' to install all dependencies
+-run 'gulp watch' task (new browser tab will open automatically)
+
+
+
+
 # Mobile Web Specialist Certification Course
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
