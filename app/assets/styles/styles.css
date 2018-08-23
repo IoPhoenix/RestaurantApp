@@ -515,11 +515,11 @@ header h1 a {
   }
 }
 
-#restaurants-list li button.favorite-button .is-favorite {
+#restaurants-list li button.favorite-button.is-favorite {
   background-color: #f70d0d;
 }
 
-#restaurants-list li button.favorite-button .is-not-favorite {
+#restaurants-list li button.favorite-button.is-not-favorite {
   background-color: #222;
 }
 

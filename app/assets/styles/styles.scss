@@ -477,10 +477,10 @@ header {
         @include tablet {
           right: 10.5px;
         }
-        .is-favorite {
+        &.is-favorite {
           background-color: #f70d0d;
         }
-        .is-not-favorite {
+        &.is-not-favorite {
           background-color: $defaultDark;
         }
       }

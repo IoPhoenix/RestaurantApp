@@ -161,15 +161,18 @@ const createRestaurantHTML = (restaurant) => {
   const favorite = document.createElement('button');
   favorite.innerHTML = '❤';
   favorite.classList.add('favorite-button');
-  favorite.onClick = function() {
+
+  favorite.addEventListener('click', () => {
     console.log('fav button is clicked!');
     const isFavorite = !restaurant.is_favorite;
+    console.log('from button click, isFavorite type: ', typeof isFavorite);
 
     // send update to the server:
+    console.log('id of liked restaurant: ', restaurant.id);
     DBHelper.updateFavoriteStatus(restaurant.id, isFavorite);
     restaurant.is_favorite = !restaurant.is_favorite;
     changeFavoriteElementClass(favorite, restaurant.is_favorite);
-  }
+  });
 
   changeFavoriteElementClass(favorite, restaurant.is_favorite);
   li.append(favorite);
@@ -194,13 +197,17 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
 }
 
 const changeFavoriteElementClass = (el, fav) => {
-  if (fav) {
-    el.classList.remove('is-not-favorite');
-    el.classList.add('is-favorite');
-    el.setAttribute('aria-label', 'remove as favorite');
-  } else {
+  console.log('from changeFavoriteElementClass, fav: ', fav);
+  console.log('from changeFavoriteElementClass, typeof fav: ', typeof fav);
+  console.log('from changeFavoriteElementClass, fav is false?: ', !fav);
+
+  if (!fav) {
     el.classList.remove('is-favorite');
     el.classList.add('is-not-favorite');
     el.setAttribute('aria-label', 'mark as favorite');
+  } else {
+    el.classList.remove('is-not-favorite');
+    el.classList.add('is-favorite');
+    el.setAttribute('aria-label', 'remove as favorite');
   }
 }

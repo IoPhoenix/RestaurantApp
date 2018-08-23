@@ -35,9 +35,6 @@ class DBHelper {
             });
             // create an index for the reviews relative to restaurant ID
             reviewsStore.createIndex('restaurant', 'restaurant_id');
-          case 2:
-            console.log('databases are already created');
-            break;
         }
       })
     }
@@ -50,22 +47,20 @@ class DBHelper {
       try {
         const data = await fetch(DBHelper.DATABASE_URL);
         const json = await data.json();
-        console.log('Data from server: ', json);
+        console.log('Data from server: ', data);
+        console.log('JSon from server: ', json);
         callback(null, json);
-
+        
         // if data is successfully returned from the server,
         // create new database and store data in it
        this.dbPromise()
           .then(console.log('Database created!'))
           .then(db => {
-            // if database is empty, store restaurants:
-            if (db.version !== 2) {
-              const tx = db.transaction('restaurants', 'readwrite');
-              const restaurantsStore = tx.objectStore('restaurants');
-              
-              json.forEach(restaurant => restaurantsStore.put(restaurant));
-              return tx.cemplete.then(() => Promise.resolve(json));
-            }
+            const tx = db.transaction('restaurants', 'readwrite');
+            const restaurantsStore = tx.objectStore('restaurants');
+            
+            json.forEach(restaurant => restaurantsStore.put(restaurant));
+            return tx.cemplete.then(() => Promise.resolve(json));
           })
           .then(console.log('Added restaurants info to idb!'))
           .catch(err => console.log('Could not add restaurants to idb: ', err));
@@ -223,15 +218,18 @@ class DBHelper {
 
   static updateFavoriteStatus(restaurantId, isFavorite) {
     console.log('Updating status to: ', isFavorite);
+    console.log('Updating restaurant with id: ', restaurantId);
+    console.log('link to fetch: ', `${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`);
 
     fetch(`${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`, {
       method: 'PUT'
     })
     .then(() => {
-      console.log('favorite status changed');
+      console.log('favorite status changed in database!');
       // update data in IndexedDB:
       this.dbPromise()
         .then(db => {
+          console.log('From updateFavoriteStatus, db: ', db);
           const tx = db.transaction('restaurants', 'readwrite');
           const store = tx.objectStore('restaurants');
           store.get(restaurantId)
@@ -239,6 +237,7 @@ class DBHelper {
               restaurant.is_favorite = isFavorite;
               store.put(restaurant);
             })
+            .then(console.log('Favorite status updated in IndexedDB'))
             .catch(err => console.log('Could not get requested restaurant from IndexedDB: ', err));
         })
     })

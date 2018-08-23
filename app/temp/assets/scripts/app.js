@@ -351,9 +351,6 @@ class DBHelper {
             });
             // create an index for the reviews relative to restaurant ID
             reviewsStore.createIndex('restaurant', 'restaurant_id');
-          case 2:
-            console.log('databases are already created');
-            break;
         }
       })
     }
@@ -366,22 +363,20 @@ class DBHelper {
       try {
         const data = await fetch(DBHelper.DATABASE_URL);
         const json = await data.json();
-        console.log('Data from server: ', json);
+        console.log('Data from server: ', data);
+        console.log('JSon from server: ', json);
         callback(null, json);
-
+        
         // if data is successfully returned from the server,
         // create new database and store data in it
        this.dbPromise()
           .then(console.log('Database created!'))
           .then(db => {
-            // if database is empty, store restaurants:
-            if (db.version !== 2) {
-              const tx = db.transaction('restaurants', 'readwrite');
-              const restaurantsStore = tx.objectStore('restaurants');
-              
-              json.forEach(restaurant => restaurantsStore.put(restaurant));
-              return tx.cemplete.then(() => Promise.resolve(json));
-            }
+            const tx = db.transaction('restaurants', 'readwrite');
+            const restaurantsStore = tx.objectStore('restaurants');
+            
+            json.forEach(restaurant => restaurantsStore.put(restaurant));
+            return tx.cemplete.then(() => Promise.resolve(json));
           })
           .then(console.log('Added restaurants info to idb!'))
           .catch(err => console.log('Could not add restaurants to idb: ', err));
@@ -539,15 +534,18 @@ class DBHelper {
 
   static updateFavoriteStatus(restaurantId, isFavorite) {
     console.log('Updating status to: ', isFavorite);
+    console.log('Updating restaurant with id: ', restaurantId);
+    console.log('link to fetch: ', `${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`);
 
     fetch(`${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`, {
       method: 'PUT'
     })
     .then(() => {
-      console.log('favorite status changed');
+      console.log('favorite status changed in database!');
       // update data in IndexedDB:
       this.dbPromise()
         .then(db => {
+          console.log('From updateFavoriteStatus, db: ', db);
           const tx = db.transaction('restaurants', 'readwrite');
           const store = tx.objectStore('restaurants');
           store.get(restaurantId)
@@ -555,6 +553,7 @@ class DBHelper {
               restaurant.is_favorite = isFavorite;
               store.put(restaurant);
             })
+            .then(console.log('Favorite status updated in IndexedDB'))
             .catch(err => console.log('Could not get requested restaurant from IndexedDB: ', err));
         })
     })
@@ -724,15 +723,18 @@ const createRestaurantHTML = (restaurant) => {
   const favorite = document.createElement('button');
   favorite.innerHTML = '❤';
   favorite.classList.add('favorite-button');
-  favorite.onClick = function() {
+
+  favorite.addEventListener('click', () => {
     console.log('fav button is clicked!');
     const isFavorite = !restaurant.is_favorite;
+    console.log('from button click, isFavorite type: ', typeof isFavorite);
 
     // send update to the server:
+    console.log('id of liked restaurant: ', restaurant.id);
     DBHelper.updateFavoriteStatus(restaurant.id, isFavorite);
     restaurant.is_favorite = !restaurant.is_favorite;
     changeFavoriteElementClass(favorite, restaurant.is_favorite);
-  }
+  });
 
   changeFavoriteElementClass(favorite, restaurant.is_favorite);
   li.append(favorite);
@@ -757,13 +759,17 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
 }
 
 const changeFavoriteElementClass = (el, fav) => {
-  if (fav) {
-    el.classList.remove('is-not-favorite');
-    el.classList.add('is-favorite');
-    el.setAttribute('aria-label', 'remove as favorite');
-  } else {
+  console.log('from changeFavoriteElementClass, fav: ', fav);
+  console.log('from changeFavoriteElementClass, typeof fav: ', typeof fav);
+  console.log('from changeFavoriteElementClass, fav is false?: ', !fav);
+
+  if (!fav) {
     el.classList.remove('is-favorite');
     el.classList.add('is-not-favorite');
     el.setAttribute('aria-label', 'mark as favorite');
+  } else {
+    el.classList.remove('is-not-favorite');
+    el.classList.add('is-favorite');
+    el.setAttribute('aria-label', 'remove as favorite');
   }
 }
