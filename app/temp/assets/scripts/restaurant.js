@@ -351,6 +351,9 @@ class DBHelper {
             });
             // create an index for the reviews relative to restaurant ID
             reviewsStore.createIndex('restaurant', 'restaurant_id');
+          case 2:
+            console.log('databases are already created');
+            break;
         }
       })
     }
@@ -368,14 +371,17 @@ class DBHelper {
 
         // if data is successfully returned from the server,
         // create new database and store data in it
-        this.dbPromise()
+       this.dbPromise()
           .then(console.log('Database created!'))
           .then(db => {
-            const tx = db.transaction('restaurants', 'readwrite');
-            const restaurantsStore = tx.objectStore('restaurants');
-            
-            json.forEach(restaurant => restaurantsStore.put(restaurant));
-            return tx.cemplete.then(() => Promise.resolve(json));
+            // if database is empty, store restaurants:
+            if (db.version !== 2) {
+              const tx = db.transaction('restaurants', 'readwrite');
+              const restaurantsStore = tx.objectStore('restaurants');
+              
+              json.forEach(restaurant => restaurantsStore.put(restaurant));
+              return tx.cemplete.then(() => Promise.resolve(json));
+            }
           })
           .then(console.log('Added restaurants info to idb!'))
           .catch(err => console.log('Could not add restaurants to idb: ', err));
