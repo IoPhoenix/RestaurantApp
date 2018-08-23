@@ -333,10 +333,29 @@ class DBHelper {
      * Change this to restaurants.json file location on your server.
      */
     static get DATABASE_URL() {
-      const port = 1337; // Change this to your server port
+      const port = 1337; // server port
       return `http://localhost:${port}/restaurants`;
     }
   
+    // handle relevant IndexedDB creation:
+    static dbPromise() {
+      return idb.open('db', 2, function(upgradeDB) {
+        switch(upgradeDB.oldVersion) {
+          case 0:
+            upgradeDB.createObjectStore('restaurants', {
+              keyPath: 'id'
+            });
+          case 1:
+            const reviewsStore = upgradeDB.createObjectStore('reviews', {
+              keyPath: 'id'
+            });
+            // create an index for the reviews relative to restaurant ID
+            reviewsStore.createIndex('restaurant', 'restaurant_id');
+        }
+      })
+    }
+
+
     /**
      * Fetch all restaurants.
      */
@@ -349,19 +368,17 @@ class DBHelper {
 
         // if data is successfully returned from the server,
         // create new database and store data in it
-        const dbPromise = idb.open('restaurants', 1, function(upgradeDB) {
-          upgradeDB.createObjectStore('restaurants');
-        }).then(console.log('Database created!'));
-
-        dbPromise.then(function(db) {
+        this.dbPromise()
+          .then(console.log('Database created!'))
+          .then(db => {
             const tx = db.transaction('restaurants', 'readwrite');
             const restaurantsStore = tx.objectStore('restaurants');
             
-            json.forEach(r => restaurantsStore.put(r, r.id));
-            return tx.cemplete;
-        })
-        .then(console.log('Added restaurants info to idb!'))
-        .catch(err => console.log('Could not add restaurants to idb: ', err));
+            json.forEach(restaurant => restaurantsStore.put(restaurant));
+            return tx.cemplete.then(() => Promise.resolve(json));
+          })
+          .then(console.log('Added restaurants info to idb!'))
+          .catch(err => console.log('Could not add restaurants to idb: ', err));
 
 
       } catch(err) {
@@ -513,6 +530,30 @@ class DBHelper {
       marker.addTo(self.newMap);
     return marker;
   } 
+
+  static updateFavoriteStatus(restaurantId, isFavorite) {
+    console.log('Updating status to: ', isFavorite);
+
+    fetch(`${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`, {
+      method: 'PUT'
+    })
+    .then(() => {
+      console.log('favorite status changed');
+      // update data in IndexedDB:
+      this.dbPromise()
+        .then(db => {
+          const tx = db.transaction('restaurants', 'readwrite');
+          const store = tx.objectStore('restaurants');
+          store.get(restaurantId)
+            .then(restaurant => {
+              restaurant.is_favorite = isFavorite;
+              store.put(restaurant);
+            })
+            .catch(err => console.log('Could not get requested restaurant from IndexedDB: ', err));
+        })
+    })
+    .catch(err => console.log('Error updating favorite restaurant in database: ', err));
+  }
 }
 let restaurant;
 var newMap;

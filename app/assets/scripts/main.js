@@ -158,6 +158,22 @@ const createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
+  const favorite = document.createElement('button');
+  favorite.innerHTML = '❤';
+  favorite.classList.add('favorite-button');
+  favorite.onClick = function() {
+    console.log('fav button is clicked!');
+    const isFavorite = !restaurant.is_favorite;
+
+    // send update to the server:
+    DBHelper.updateFavoriteStatus(restaurant.id, isFavorite);
+    restaurant.is_favorite = !restaurant.is_favorite;
+    changeFavoriteElementClass(favorite, restaurant.is_favorite);
+  }
+
+  changeFavoriteElementClass(favorite, restaurant.is_favorite);
+  li.append(favorite);
+
   const more = document.createElement('button');
   more.innerHTML = 'View Restaurant Details';
   more.addEventListener('click', () => window.location.href = DBHelper.urlForRestaurant(restaurant));
@@ -175,4 +191,16 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
     }
     self.markers.push(marker);
   });
+}
+
+const changeFavoriteElementClass = (el, fav) => {
+  if (fav) {
+    el.classList.remove('is-not-favorite');
+    el.classList.add('is-favorite');
+    el.setAttribute('aria-label', 'remove as favorite');
+  } else {
+    el.classList.remove('is-favorite');
+    el.classList.add('is-not-favorite');
+    el.setAttribute('aria-label', 'mark as favorite');
+  }
 }

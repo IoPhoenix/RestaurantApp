@@ -454,6 +454,7 @@ header h1 a {
 }
 
 #restaurants-list li {
+  position: relative;
   border-radius: 2px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   background-color: #ffff;
@@ -496,6 +497,30 @@ header h1 a {
     padding: 8px 30px 10px;
     width: initial;
   }
+}
+
+#restaurants-list li button.favorite-button {
+  width: min-content;
+  top: 41%;
+  right: calc(50% - 22.5px);
+  position: absolute;
+  border: 2px solid white;
+  padding: 7px 9px;
+  font-size: 1.2em;
+}
+
+@media (min-width: 768px) {
+  #restaurants-list li button.favorite-button {
+    right: 10.5px;
+  }
+}
+
+#restaurants-list li button.favorite-button .is-favorite {
+  background-color: #f70d0d;
+}
+
+#restaurants-list li button.favorite-button .is-not-favorite {
+  background-color: #222;
 }
 
 #restaurants-list li p,

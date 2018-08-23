@@ -333,10 +333,29 @@ class DBHelper {
      * Change this to restaurants.json file location on your server.
      */
     static get DATABASE_URL() {
-      const port = 1337; // Change this to your server port
+      const port = 1337; // server port
       return `http://localhost:${port}/restaurants`;
     }
   
+    // handle relevant IndexedDB creation:
+    static dbPromise() {
+      return idb.open('db', 2, function(upgradeDB) {
+        switch(upgradeDB.oldVersion) {
+          case 0:
+            upgradeDB.createObjectStore('restaurants', {
+              keyPath: 'id'
+            });
+          case 1:
+            const reviewsStore = upgradeDB.createObjectStore('reviews', {
+              keyPath: 'id'
+            });
+            // create an index for the reviews relative to restaurant ID
+            reviewsStore.createIndex('restaurant', 'restaurant_id');
+        }
+      })
+    }
+
+
     /**
      * Fetch all restaurants.
      */
@@ -349,19 +368,17 @@ class DBHelper {
 
         // if data is successfully returned from the server,
         // create new database and store data in it
-        const dbPromise = idb.open('restaurants', 1, function(upgradeDB) {
-          upgradeDB.createObjectStore('restaurants');
-        }).then(console.log('Database created!'));
-
-        dbPromise.then(function(db) {
+        this.dbPromise()
+          .then(console.log('Database created!'))
+          .then(db => {
             const tx = db.transaction('restaurants', 'readwrite');
             const restaurantsStore = tx.objectStore('restaurants');
             
-            json.forEach(r => restaurantsStore.put(r, r.id));
-            return tx.cemplete;
-        })
-        .then(console.log('Added restaurants info to idb!'))
-        .catch(err => console.log('Could not add restaurants to idb: ', err));
+            json.forEach(restaurant => restaurantsStore.put(restaurant));
+            return tx.cemplete.then(() => Promise.resolve(json));
+          })
+          .then(console.log('Added restaurants info to idb!'))
+          .catch(err => console.log('Could not add restaurants to idb: ', err));
 
 
       } catch(err) {
@@ -513,6 +530,30 @@ class DBHelper {
       marker.addTo(self.newMap);
     return marker;
   } 
+
+  static updateFavoriteStatus(restaurantId, isFavorite) {
+    console.log('Updating status to: ', isFavorite);
+
+    fetch(`${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`, {
+      method: 'PUT'
+    })
+    .then(() => {
+      console.log('favorite status changed');
+      // update data in IndexedDB:
+      this.dbPromise()
+        .then(db => {
+          const tx = db.transaction('restaurants', 'readwrite');
+          const store = tx.objectStore('restaurants');
+          store.get(restaurantId)
+            .then(restaurant => {
+              restaurant.is_favorite = isFavorite;
+              store.put(restaurant);
+            })
+            .catch(err => console.log('Could not get requested restaurant from IndexedDB: ', err));
+        })
+    })
+    .catch(err => console.log('Error updating favorite restaurant in database: ', err));
+  }
 }
 let restaurants,
   neighborhoods,
@@ -674,6 +715,22 @@ const createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
+  const favorite = document.createElement('button');
+  favorite.innerHTML = '❤';
+  favorite.classList.add('favorite-button');
+  favorite.onClick = function() {
+    console.log('fav button is clicked!');
+    const isFavorite = !restaurant.is_favorite;
+
+    // send update to the server:
+    DBHelper.updateFavoriteStatus(restaurant.id, isFavorite);
+    restaurant.is_favorite = !restaurant.is_favorite;
+    changeFavoriteElementClass(favorite, restaurant.is_favorite);
+  }
+
+  changeFavoriteElementClass(favorite, restaurant.is_favorite);
+  li.append(favorite);
+
   const more = document.createElement('button');
   more.innerHTML = 'View Restaurant Details';
   more.addEventListener('click', () => window.location.href = DBHelper.urlForRestaurant(restaurant));
@@ -691,4 +748,16 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
     }
     self.markers.push(marker);
   });
+}
+
+const changeFavoriteElementClass = (el, fav) => {
+  if (fav) {
+    el.classList.remove('is-not-favorite');
+    el.classList.add('is-favorite');
+    el.setAttribute('aria-label', 'remove as favorite');
+  } else {
+    el.classList.remove('is-favorite');
+    el.classList.add('is-not-favorite');
+    el.setAttribute('aria-label', 'mark as favorite');
+  }
 }
