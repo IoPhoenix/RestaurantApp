@@ -759,17 +759,23 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
 }
 
 const changeFavoriteElementClass = (el, fav) => {
-  console.log('from changeFavoriteElementClass, fav: ', fav);
   console.log('from changeFavoriteElementClass, typeof fav: ', typeof fav);
-  console.log('from changeFavoriteElementClass, fav is false?: ', !fav);
 
-  if (!fav) {
-    el.classList.remove('is-favorite');
-    el.classList.add('is-not-favorite');
-    el.setAttribute('aria-label', 'mark as favorite');
-  } else {
-    el.classList.remove('is-not-favorite');
-    el.classList.add('is-favorite');
-    el.setAttribute('aria-label', 'remove as favorite');
+  // temp workaround since updated status is_favorite 
+  // is returned as string not boolean
+  if (fav === 'false') {
+    fav = false;
+  } else if (fav === 'true') {
+    fav = true;
   }
+
+    if (!fav) {
+      el.classList.remove('is-favorite');
+      el.classList.add('is-not-favorite');
+      el.setAttribute('aria-label', 'mark as favorite');
+    } else {
+      el.classList.remove('is-not-favorite');
+      el.classList.add('is-favorite');
+      el.setAttribute('aria-label', 'remove as favorite');
+    }
 }
