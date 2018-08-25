@@ -54,6 +54,38 @@
       <section id="reviews-container">
         <ul id="reviews-list"></ul>
       </section> <!-- / #reviews-container -->
+
+      <section id="form-container">
+        <h2 id="form-name">Add a review</h2>
+        <form id="review-form">
+
+          <div id="author-rating-container">
+              <div id="review-author-container">
+                  <h3><label for="review-author">Name:</label></h3>
+                  <input type="text" id="review-author" name="review-author" class="form-control">
+              </div>
+      
+              <div id="review-rating-container">
+                <h3><label for="select-rating">Rating:</label></h3>
+                <select aria-label="Select rating" name="select-rating" id="select-rating" class="form-control">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+          </div>
+        
+
+          <div id="review-comments-container">
+            <h3><label for="review-comments">Comments:</label></h3>
+            <textarea name="review-comments" id="review-comments" class="form-control"></textarea><br>
+            <p id="form-error"></p>
+            <button type="submit" class="submit-button" onClick="addReview()">Add Review</button>
+          </div>
+        </form>
+      </section>
     </main>
 
     <footer id="footer" class="absolute-positioned">

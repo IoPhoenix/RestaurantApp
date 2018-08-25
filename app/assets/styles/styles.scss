@@ -450,47 +450,48 @@ header {
       margin: 20px 0 10px;
       text-transform: uppercase;
     }
-    button {
-      font-size: 12pt;
-      background-color: $defaultDark;
-      border: none;
-      border-radius: 20px;
-      color: $white;
-      margin: 15px 0 0;
-      text-align: center;
-      text-transform: uppercase;
-      width: 100%;
-      padding: 13px 0;
-      &:hover, &:focus {
-        background-color: $blue;
-      }
-      @include tablet {
-        padding: 8px 30px 10px;
-        width: initial;
-      }
-      &.favorite-button {
-        width: min-content;
-        bottom: -14.469px;
-        right: calc(50% - 22.5px);
-        position: absolute;
-        border: 2px solid white;
-        padding: 7px 9px;
-        font-size: 1.2em;
-        @include tablet {
-          right: -9.5px;
-        }
-        &.is-favorite {
-          background-color: #f70d0d;
-        }
-        &.is-not-favorite {
-          background-color: $defaultDark;
-        }
-      }
-    }
     p, 
     address {
       font-style: inherit;
       margin: 0;
+    }
+  }
+}
+
+button {
+  font-size: 12pt;
+  background-color: $defaultDark;
+  border: none;
+  border-radius: 20px;
+  color: $white;
+  margin: 15px 0 0;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+  padding: 13px 0;
+  &:hover, &:focus {
+    background-color: $blue;
+  }
+  @include tablet {
+    padding: 8px 30px 10px;
+    width: initial;
+  }
+  &.favorite-button {
+    width: min-content;
+    bottom: -14.469px;
+    right: calc(50% - 22.5px);
+    position: absolute;
+    border: 2px solid white;
+    padding: 7px 9px;
+    font-size: 1.2em;
+    @include tablet {
+      right: -9.5px;
+    }
+    &.is-favorite {
+      background-color: #f70d0d;
+    }
+    &.is-not-favorite {
+      background-color: $defaultDark;
     }
   }
 }
@@ -585,7 +586,8 @@ figure {
 
 
 #restaurant-container, 
-#reviews-container {
+#reviews-container,
+#form-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid $white;
   padding: 120px 30px 30px;
@@ -642,4 +644,52 @@ figure {
 
 #restaurant-hours td {
   color: #666;
+}
+
+#form-container {
+  h2 {
+    color: $burgundy;
+    font-size: 24pt;
+    font-weight: 400;
+    font-family: $story;
+    letter-spacing: -1px;
+    padding-bottom: 1pt;
+  }
+  #review-form {
+    display: flex;
+    flex-direction: column;
+  }
+  #author-rating-container {
+    display: flex;
+  }
+  #review-author-container {
+    flex: 2;
+  }
+  #review-rating-container {
+    flex: 1;
+    select {
+      height: 34px;
+      width: 25%;
+    }
+  }
+  #review-comments-container {
+    margin-top: 20px;
+  }
+  #review-comments,
+  #review-author {
+    width: 100%;
+    @include phone {
+      width: 70%;
+      margin: 0 auto;
+    }
+  }
+  .form-control {
+    background-color: $white;
+    display: block;
+    padding: .375rem .75rem;
+    color: #495057;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    line-height: 24px;
+  }
 }

@@ -478,7 +478,13 @@ header h1 a {
   text-transform: uppercase;
 }
 
-#restaurants-list li button {
+#restaurants-list li p,
+#restaurants-list li address {
+  font-style: inherit;
+  margin: 0;
+}
+
+button {
   font-size: 12pt;
   background-color: #222;
   border: none;
@@ -491,18 +497,18 @@ header h1 a {
   padding: 13px 0;
 }
 
-#restaurants-list li button:hover, #restaurants-list li button:focus {
+button:hover, button:focus {
   background-color: #4d90fe;
 }
 
 @media (min-width: 768px) {
-  #restaurants-list li button {
+  button {
     padding: 8px 30px 10px;
     width: initial;
   }
 }
 
-#restaurants-list li button.favorite-button {
+button.favorite-button {
   width: min-content;
   bottom: -14.469px;
   right: calc(50% - 22.5px);
@@ -513,23 +519,17 @@ header h1 a {
 }
 
 @media (min-width: 768px) {
-  #restaurants-list li button.favorite-button {
+  button.favorite-button {
     right: -9.5px;
   }
 }
 
-#restaurants-list li button.favorite-button.is-favorite {
+button.favorite-button.is-favorite {
   background-color: #f70d0d;
 }
 
-#restaurants-list li button.favorite-button.is-not-favorite {
+button.favorite-button.is-not-favorite {
   background-color: #222;
-}
-
-#restaurants-list li p,
-#restaurants-list li address {
-  font-style: inherit;
-  margin: 0;
 }
 
 .restaurant-img {
@@ -624,7 +624,8 @@ figure {
 }
 
 #restaurant-container,
-#reviews-container {
+#reviews-container,
+#form-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #ffff;
   padding: 120px 30px 30px;
@@ -632,7 +633,8 @@ figure {
 
 @media (min-width: 480px) {
   #restaurant-container,
-  #reviews-container {
+  #reviews-container,
+  #form-container {
     width: 70%;
     margin: 0 auto;
   }
@@ -640,7 +642,8 @@ figure {
 
 @media (min-width: 768px) {
   #restaurant-container,
-  #reviews-container {
+  #reviews-container,
+  #form-container {
     width: 50%;
     margin: 0;
   }
@@ -648,7 +651,8 @@ figure {
 
 @media (min-width: 992px) {
   #restaurant-container,
-  #reviews-container {
+  #reviews-container,
+  #form-container {
     padding: 120px 40px 30px;
   }
 }
@@ -702,4 +706,62 @@ figure {
 
 #restaurant-hours td {
   color: #666;
+}
+
+#form-container h2 {
+  color: #922123;
+  font-size: 24pt;
+  font-weight: 400;
+  font-family: "Poor Story", cursive;
+  letter-spacing: -1px;
+  padding-bottom: 1pt;
+}
+
+#form-container #review-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#form-container #author-rating-container {
+  display: flex;
+}
+
+#form-container #review-author-container {
+  flex: 2;
+}
+
+#form-container #review-rating-container {
+  flex: 1;
+}
+
+#form-container #review-rating-container select {
+  height: 34px;
+  width: 25%;
+}
+
+#form-container #review-comments-container {
+  margin-top: 20px;
+}
+
+#form-container #review-comments,
+#form-container #review-author {
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  #form-container #review-comments,
+  #form-container #review-author {
+    width: 70%;
+    margin: 0 auto;
+  }
+}
+
+#form-container .form-control {
+  background-color: #ffff;
+  display: block;
+  padding: .375rem .75rem;
+  color: #495057;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  line-height: 24px;
 }
