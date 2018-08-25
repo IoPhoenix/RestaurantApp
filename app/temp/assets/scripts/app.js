@@ -363,8 +363,7 @@ class DBHelper {
       try {
         const data = await fetch(DBHelper.DATABASE_URL);
         const json = await data.json();
-        console.log('Data from server: ', data);
-        console.log('JSon from server: ', json);
+        console.log('data returned from server: ', json);
         callback(null, json);
         
         // if data is successfully returned from the server,
@@ -534,8 +533,6 @@ class DBHelper {
 
   static updateFavoriteStatus(restaurantId, isFavorite) {
     console.log('Updating status to: ', isFavorite);
-    console.log('Updating restaurant with id: ', restaurantId);
-    console.log('link to fetch: ', `${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`);
 
     fetch(`${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`, {
       method: 'PUT'
@@ -702,11 +699,44 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
 const createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
+
+  const imageBox = document.createElement('div');
+  imageBox.className = 'image-box';
+
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   image.setAttribute('alt', `Photo of ${restaurant.name} restaurant`);
-  li.append(image);
+  imageBox.append(image);
+
+  const favorite = document.createElement('button');
+  favorite.innerHTML = '❤';
+  favorite.classList.add('favorite-button');
+
+  favorite.addEventListener('click', () => {
+    console.log('fav button is clicked!');
+
+    if (restaurant.is_favorite === 'false') {
+      restaurant.is_favorite = false;
+    } else if (restaurant.is_favorite === 'true') {
+      restaurant.is_favorite = true;
+    }
+    
+    const isFavorite = !restaurant.is_favorite;
+    console.log('from button click, isFavorite type: ', typeof isFavorite);
+
+    // send update to the server:
+    console.log('id of liked restaurant: ', restaurant.id);
+    DBHelper.updateFavoriteStatus(restaurant.id, isFavorite);
+    restaurant.is_favorite = !restaurant.is_favorite;
+    changeFavoriteElementClass(favorite, restaurant.is_favorite);
+  });
+
+  changeFavoriteElementClass(favorite, restaurant.is_favorite);
+  imageBox.append(favorite);
+  li.append(imageBox);
+
+
 
   const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
@@ -720,25 +750,7 @@ const createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
-  const favorite = document.createElement('button');
-  favorite.innerHTML = '❤';
-  favorite.classList.add('favorite-button');
-
-  favorite.addEventListener('click', () => {
-    console.log('fav button is clicked!');
-    const isFavorite = !restaurant.is_favorite;
-    console.log('from button click, isFavorite type: ', typeof isFavorite);
-
-    // send update to the server:
-    console.log('id of liked restaurant: ', restaurant.id);
-    DBHelper.updateFavoriteStatus(restaurant.id, isFavorite);
-    restaurant.is_favorite = !restaurant.is_favorite;
-    changeFavoriteElementClass(favorite, restaurant.is_favorite);
-  });
-
-  changeFavoriteElementClass(favorite, restaurant.is_favorite);
-  li.append(favorite);
-
+ 
   const more = document.createElement('button');
   more.innerHTML = 'View Restaurant Details';
   more.addEventListener('click', () => window.location.href = DBHelper.urlForRestaurant(restaurant));
@@ -759,16 +771,12 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
 }
 
 const changeFavoriteElementClass = (el, fav) => {
+  console.log('from changeFavoriteElementClass, fav is: ', fav);
   console.log('from changeFavoriteElementClass, typeof fav: ', typeof fav);
 
   // temp workaround since updated status is_favorite 
   // is returned as string not boolean
-  if (fav === 'false') {
-    fav = false;
-  } else if (fav === 'true') {
-    fav = true;
-  }
-
+  if (typeof fav === 'boolean') { 
     if (!fav) {
       el.classList.remove('is-favorite');
       el.classList.add('is-not-favorite');
@@ -778,4 +786,15 @@ const changeFavoriteElementClass = (el, fav) => {
       el.classList.add('is-favorite');
       el.setAttribute('aria-label', 'remove as favorite');
     }
+  } else if (typeof fav === 'string') {
+    if (fav === 'false') {
+      el.classList.remove('is-favorite');
+      el.classList.add('is-not-favorite');
+      el.setAttribute('aria-label', 'mark as favorite');
+    } else {
+      el.classList.remove('is-not-favorite');
+      el.classList.add('is-favorite');
+      el.setAttribute('aria-label', 'remove as favorite');
+    }
+  }
 }

@@ -47,8 +47,7 @@ class DBHelper {
       try {
         const data = await fetch(DBHelper.DATABASE_URL);
         const json = await data.json();
-        console.log('Data from server: ', data);
-        console.log('JSon from server: ', json);
+        console.log('data returned from server: ', json);
         callback(null, json);
         
         // if data is successfully returned from the server,
@@ -218,8 +217,6 @@ class DBHelper {
 
   static updateFavoriteStatus(restaurantId, isFavorite) {
     console.log('Updating status to: ', isFavorite);
-    console.log('Updating restaurant with id: ', restaurantId);
-    console.log('link to fetch: ', `${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`);
 
     fetch(`${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`, {
       method: 'PUT'
