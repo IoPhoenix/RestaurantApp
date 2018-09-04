@@ -658,7 +658,7 @@ figure {
 }
 
 #reviews-container {
-  padding: 30px 30px 100px;
+  padding: 30px 30px;
 }
 
 #reviews-container h2 {
@@ -708,6 +708,10 @@ figure {
   color: #666;
 }
 
+#form-container {
+  padding: 30px 40px 100px;
+}
+
 #form-container h2 {
   color: #922123;
   font-size: 24pt;
@@ -752,7 +756,6 @@ figure {
   #form-container #review-comments,
   #form-container #review-author {
     width: 70%;
-    margin: 0 auto;
   }
 }
 

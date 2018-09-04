@@ -605,7 +605,7 @@ figure {
 }
 
 #reviews-container {
-  padding: 30px 30px 100px;
+  padding: 30px 30px;
   h2 {
     color: $burgundy;
     font-size: 24pt;
@@ -647,6 +647,7 @@ figure {
 }
 
 #form-container {
+  padding: 30px 40px 100px;
   h2 {
     color: $burgundy;
     font-size: 24pt;
@@ -680,7 +681,6 @@ figure {
     width: 100%;
     @include phone {
       width: 70%;
-      margin: 0 auto;
     }
   }
   .form-control {

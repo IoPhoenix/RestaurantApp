@@ -6,9 +6,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
 });
 
-/**
- * Initialize leaflet map
- */
+
+/* Initialize leaflet map */
 const initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
@@ -47,10 +46,13 @@ const fetchRestaurantFromURL = (callback) => {
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
+      console.log('From fetchRestaurantById, self.restaurant is: ', self.restaurant);
+      console.log('From fetchRestaurantById, restaurant is: ', restaurant);
       if (!restaurant) {
         console.error(error);
         return;
       }
+      DBHelper.fetchReviewsByRestaurantId(id);
       fillRestaurantHTML();
       callback(null, restaurant)
     });
@@ -85,8 +87,9 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
+
+  // fillReviewsHTML(DBHelper.fetchReviewsByRestaurantId(restaurant.id));
+  fillReviewsHTML(restaurant.id);
 }
 
 /**
@@ -109,31 +112,31 @@ const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hour
   }
 }
 
-/**
- * Create all reviews HTML and add them to the webpage.
- */
-const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+/* Create all reviews HTML and add them to the webpage.*/
+const fillReviewsHTML = (id) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
-  if (!reviews) {
-    const noReviews = document.createElement('h2');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
-    return;
-  }
-  const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
-  });
-  container.appendChild(ul);
+  DBHelper.getStoredObjectById('reviews', 'restaurant', id)
+    .then(storedReviews => {
+      console.log('fetching reviews from idb...');
+      // Promise.resolve(storedReviews);
+      const ul = document.getElementById('reviews-list');
+      storedReviews.forEach(review => ul.appendChild(createReviewHTML(review)))
+      container.appendChild(ul);
+    })
+    .catch(err => {
+      console.log('Error fetching reviews from idb: ', err);
+      const noReviews = document.createElement('h2');
+      noReviews.innerHTML = 'No reviews yet!';
+      container.appendChild(noReviews);
+      return;
+    });
 }
 
-/**
- * Create review HTML and add it to the webpage.
- */
+/* Create review HTML and add it to the webpage */
 const createReviewHTML = (review) => {
     const li = document.createElement('li');
     const name = document.createElement('h3');
@@ -141,7 +144,7 @@ const createReviewHTML = (review) => {
     li.appendChild(name);
 
     const date = document.createElement('em');
-    date.innerHTML = review.date;
+    date.innerHTML = Date(review.createdAt);
     li.appendChild(date);
 
     const rating = document.createElement('p');
@@ -156,9 +159,7 @@ const createReviewHTML = (review) => {
     return li;
 }
 
-/**
- * Add restaurant name to the breadcrumb navigation menu
- */
+/* Add restaurant name to the breadcrumb navigation menu */
 const fillBreadcrumb = (restaurant=self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
@@ -170,9 +171,7 @@ const fillBreadcrumb = (restaurant=self.restaurant) => {
   breadcrumb.appendChild(li);
 }
 
-/**
- * Get a parameter by name from page URL.
- */
+/* Get a parameter by name from page URL. */
 const getParameterByName = (name, url) => {
   if (!url)
     url = window.location.href;

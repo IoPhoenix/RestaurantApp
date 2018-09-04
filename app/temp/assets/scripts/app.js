@@ -326,15 +326,12 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('ServiceWorker registration failed: ', err));
 }
  
-class DBHelper {
 
-    /**
-     * Database URL.
-     * Change this to restaurants.json file location on your server.
-     */
+
+class DBHelper {
     static get DATABASE_URL() {
       const port = 1337; // server port
-      return `http://localhost:${port}/restaurants`;
+      return `http://localhost:${port}/`;
     }
   
     // handle relevant IndexedDB creation:
@@ -342,15 +339,21 @@ class DBHelper {
       return idb.open('db', 2, function(upgradeDB) {
         switch(upgradeDB.oldVersion) {
           case 0:
+            console.log('upgradeDB.oldVersion: ', upgradeDB.oldVersion);
             upgradeDB.createObjectStore('restaurants', {
               keyPath: 'id'
             });
           case 1:
+            console.log('upgradeDB.oldVersion: ', upgradeDB.oldVersion);
             const reviewsStore = upgradeDB.createObjectStore('reviews', {
               keyPath: 'id'
             });
             // create an index for the reviews relative to restaurant ID
             reviewsStore.createIndex('restaurant', 'restaurant_id');
+          default:
+            console.log('upgradeDB.oldVersion: ', upgradeDB.oldVersion);
+            return;
+
         }
       })
     }
@@ -361,9 +364,9 @@ class DBHelper {
      */
     static async fetchRestaurants(callback) {
       try {
-        const data = await fetch(DBHelper.DATABASE_URL);
+        const data = await fetch(`${DBHelper.DATABASE_URL}restaurants`);
         const json = await data.json();
-        console.log('data returned from server: ', json);
+        console.log('restaurant data returned from server: ', json);
         callback(null, json);
         
         // if data is successfully returned from the server,
@@ -382,6 +385,7 @@ class DBHelper {
 
 
       } catch(err) {
+        console.log('Error with the network, you are offline');
 
          // if app is offline, fetch restaurants from the IndexedDB database:
         idb.open('restaurants', 1).then(function(db) {
@@ -395,16 +399,16 @@ class DBHelper {
       }
     }
   
-    /**
-     * Fetch a restaurant by its ID.
-     */
+    /* Fetch a restaurant by its ID. */
     static fetchRestaurantById(id, callback) {
+
       // fetch all restaurants with proper error handling.
       DBHelper.fetchRestaurants((error, restaurants) => {
         if (error) {
           callback(error, null);
         } else {
           const restaurant = restaurants.find(r => r.id == id);
+          console.log("from fetchRestaurantById, restaurant is: ", restaurant);
           if (restaurant) { // Got the restaurant
             callback(null, restaurant);
           } else { // Restaurant does not exist in the database
@@ -534,7 +538,7 @@ class DBHelper {
   static updateFavoriteStatus(restaurantId, isFavorite) {
     console.log('Updating status to: ', isFavorite);
 
-    fetch(`${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`, {
+    fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {
       method: 'PUT'
     })
     .then(() => {
@@ -556,6 +560,59 @@ class DBHelper {
     })
     .catch(err => console.log('Error updating favorite restaurant in database: ', err));
   }
+
+
+
+  static getStoredObjectById(table, idx, id) {
+    return this.dbPromise()
+      .then(db => {
+        if (!db) return;
+
+        const store = db.transaction(table).objectStore(table);
+        const indexId = store.index(idx);
+        return indexId.getAll(id);
+      });
+  }
+
+
+
+  static async fetchReviewsByRestaurantId(id) {
+    // fetch reviews from the server:
+    try {
+      const data = await fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`);
+      const reviews = await data.json();
+
+      console.log('From fetchReviewsByRestaurantId, fetch request was successful!');
+      console.log('from fetchReviewsByRestaurantId, reviews are: ', reviews);
+
+      this.dbPromise().then(db => {
+          if (!db) return;
+
+          // store reviews in IndexedDB:
+          let tx = db.transaction('reviews', 'readwrite');
+          const store = tx.objectStore('reviews');
+          console.log('From this.dbPromise, reviews are: ', reviews);
+          if (Array.isArray(reviews)) {
+            reviews.forEach(review => store.put(review));
+          } else {
+            store.put(reviews);
+          }
+        })
+        .then(console.log('Added reviews info to idb!'))
+        .catch(err => console.log('Could not add reviews to idb: ', err));
+
+        // Return the list of reviews:
+        return Promise.resolve(reviews);
+      } catch(err) {
+          console.log('From fetchReviewsByRestaurantId, error: ', err);
+          // if offline, take reviews from IndexedDB:
+          return DBHelper.getStoredObjectById('reviews', 'restaurant', id)
+            .then(storedReviews => {
+              console('looking for offline stored reviews');
+              Promise.resolve(storedReviews);
+          })  
+      }
+  } 
 }
 let restaurants,
   neighborhoods,
@@ -723,7 +780,6 @@ const createRestaurantHTML = (restaurant) => {
     }
     
     const isFavorite = !restaurant.is_favorite;
-    console.log('from button click, isFavorite type: ', typeof isFavorite);
 
     // send update to the server:
     console.log('id of liked restaurant: ', restaurant.id);
@@ -771,11 +827,8 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
 }
 
 const changeFavoriteElementClass = (el, fav) => {
-  console.log('from changeFavoriteElementClass, fav is: ', fav);
-  console.log('from changeFavoriteElementClass, typeof fav: ', typeof fav);
-
-  // temp workaround since updated status is_favorite 
-  // is returned as string not boolean
+  // workaround since updated status is_favorite 
+  // is returned from the server as a string not boolean
   if (typeof fav === 'boolean') { 
     if (!fav) {
       el.classList.remove('is-favorite');

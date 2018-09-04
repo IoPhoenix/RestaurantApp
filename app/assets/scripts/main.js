@@ -164,7 +164,6 @@ const createRestaurantHTML = (restaurant) => {
     }
     
     const isFavorite = !restaurant.is_favorite;
-    console.log('from button click, isFavorite type: ', typeof isFavorite);
 
     // send update to the server:
     console.log('id of liked restaurant: ', restaurant.id);
@@ -212,11 +211,8 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
 }
 
 const changeFavoriteElementClass = (el, fav) => {
-  console.log('from changeFavoriteElementClass, fav is: ', fav);
-  console.log('from changeFavoriteElementClass, typeof fav: ', typeof fav);
-
-  // temp workaround since updated status is_favorite 
-  // is returned as string not boolean
+  // workaround since updated status is_favorite 
+  // is returned from the server as a string not boolean
   if (typeof fav === 'boolean') { 
     if (!fav) {
       el.classList.remove('is-favorite');
