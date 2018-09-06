@@ -615,7 +615,7 @@ class DBHelper {
     const offilineObject = {
       name: 'addReview',
       data: review,
-      object_type: 'review'
+      objectType: 'review'
     };
 
     // check if online. If offline, store data in local storage,
@@ -654,6 +654,40 @@ class DBHelper {
       })
       .then(data => console.log('Fetch successful'))
       .catch(err => console.log(err));
+  }
+  
+
+  static sendDataWhenOnline(offlineObject) {
+    console.log('Object to store: ', offlineObject);
+    // store new local in the local storage for future use:
+    localStorage.setItem('data', JSON.stringify(offlineObject.data));
+    console.log(`Local storage: ${offlineObject.objectType} is stored!`);
+
+    // wait until the user is back online,
+    // then retrieve stored review from local storage:
+    window.addEventListener('online', (event) => {
+      console.log('Browser: online again!');
+      const data = JSON.parse(localStorage.getItem('data'));
+      console.log('Updating and cleaning ui...');
+      [...document.querySelectorAll('.reviews-offline')].forEach(review => {
+        review.classList.remove('reviews-offline');
+        review.querySelector('.offline-label').remove();
+      });
+
+      if (data !== null) {
+        console.log('From sendDataWhenOnline, data is: ', data);
+        if (offlineObject.name === 'addReview') {
+          // send review to the server:
+          DBHelper.addReview(offlineObject.data);
+        }
+
+        console.log('Review from local storage sent to server');
+
+        // clear local storage:
+        localStorage.removeItem('data');
+        console.log(`Local Storage: ${offlineObject.objectType} removed!`);
+      }
+    });
   }
 }
 let restaurant;
@@ -794,12 +828,21 @@ const fillReviewsHTML = (reviews) => {
 /* Create review HTML and add it to the webpage */
 const createReviewHTML = (review) => {
     const li = document.createElement('li');
+
+    if (!navigator.onLine) {
+      const connectionStatus = document.createElement('p');
+      connectionStatus.classList.add('offline-label');
+      connectionStatus.innerHTML = 'Offline';
+      li.classList.add('reviews-offline');
+      li.appendChild(connectionStatus);
+    }
+
     const name = document.createElement('h3');
     name.innerHTML = review.name;
     li.appendChild(name);
 
     const date = document.createElement('em');
-    date.innerHTML = Date(review.createdAt);
+    date.innerHTML = new Date(review.createdAt).toLocaleString();
     li.appendChild(date);
 
     const rating = document.createElement('p');

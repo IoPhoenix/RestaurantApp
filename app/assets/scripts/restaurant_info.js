@@ -136,12 +136,21 @@ const fillReviewsHTML = (reviews) => {
 /* Create review HTML and add it to the webpage */
 const createReviewHTML = (review) => {
     const li = document.createElement('li');
+
+    if (!navigator.onLine) {
+      const connectionStatus = document.createElement('p');
+      connectionStatus.classList.add('offline-label');
+      connectionStatus.innerHTML = 'Offline';
+      li.classList.add('reviews-offline');
+      li.appendChild(connectionStatus);
+    }
+
     const name = document.createElement('h3');
     name.innerHTML = review.name;
     li.appendChild(name);
 
     const date = document.createElement('em');
-    date.innerHTML = Date(review.createdAt);
+    date.innerHTML = new Date(review.createdAt).toLocaleString();
     li.appendChild(date);
 
     const rating = document.createElement('p');
