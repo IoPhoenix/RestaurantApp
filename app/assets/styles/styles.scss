@@ -675,6 +675,10 @@ figure {
   }
   #review-comments-container {
     margin-top: 20px;
+    #form-error {
+      color: $burgundy;
+      font-weight: 700;
+    }
   }
   #review-comments,
   #review-author {

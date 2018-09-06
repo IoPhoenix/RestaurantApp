@@ -609,6 +609,52 @@ class DBHelper {
           })  
       }
   } 
+
+  static addReview(review) {
+    // create an object for offline storage:
+    const offilineObject = {
+      name: 'addReview',
+      data: review,
+      object_type: 'review'
+    };
+
+    // check if online. If offline, store data in local storage,
+    // send it to server when back online
+    if (!navigator.onLine && (offilineObject.name === 'addReview')) {
+      DBHelper.sendDataWhenOnline(offilineObject);
+      return;
+    }
+
+    const reviewToSend = {
+      "name": review.name,
+      "rating": parseInt(review.rating),
+      "comments": review.comments,
+      "restaurant_id": parseInt(review.restaurant_id)
+    };
+
+    console.log('Sending review: ', reviewToSend);
+
+    const fetchOptions = {
+      method: 'POST',
+      body: JSON.stringify(reviewToSend),
+      headers: new Headers({ 
+        'Content-Type': 'application/json'
+      })
+    };
+
+    fetch(`${DBHelper.DATABASE_URL}reviews`, fetchOptions)
+      .then(response => {
+        console.log('from addReview, response from server: ', response);
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.indexOf('application/json') !== -1) {
+          return response.json();
+        } else {
+          return 'API call successfull';
+        }
+      })
+      .then(data => console.log('Fetch successful'))
+      .catch(err => console.log(err));
+  }
 }
 let restaurants,
   neighborhoods,

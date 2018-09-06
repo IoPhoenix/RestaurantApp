@@ -181,3 +181,40 @@ const getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+
+  // validate form
+  const addReview = () => {
+    console.log('Form is submitted!');
+
+    event.preventDefault();
+    let restaurantId = getParameterByName('id');
+    let name = document.getElementById('review-author').value;
+    let comments = document.getElementById('review-comments').value;
+    let rating = document.querySelector('#select-rating option:checked').value; 
+    let errorField =  document.getElementById('form-error'); 
+
+    const isValidated = name && comments;
+
+    if (!isValidated) {
+      errorField.innerText = 'Please fill in the form!';
+      return;
+    }
+
+    const review = [name, restaurantId, rating, comments];  
+    console.log('From addReview, review is: ', review);
+
+    const validatedReview = {
+      restaurant_id: parseInt([review[1]]),
+      rating: parseInt(review[2]),
+      name: review[0].trim(),
+      comments: review[3].trim().substring(0, 300),
+      createdAt: new Date()
+    }
+
+    console.log('From addReview, validatedReview is: ', validatedReview);
+    //  send review to the server
+    DBHelper.addReview(validatedReview);
+    // addReviewHtml(validatedReview);
+    document.getElementById('review-form').reset();
+  }
