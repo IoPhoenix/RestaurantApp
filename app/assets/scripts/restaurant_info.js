@@ -133,17 +133,10 @@ const fillReviewsHTML = (reviews) => {
   container.appendChild(ul);
 }
 
+
 /* Create review HTML and add it to the webpage */
 const createReviewHTML = (review) => {
     const li = document.createElement('li');
-
-    if (!navigator.onLine) {
-      const connectionStatus = document.createElement('p');
-      connectionStatus.classList.add('offline-label');
-      connectionStatus.innerHTML = 'Offline';
-      li.classList.add('reviews-offline');
-      li.appendChild(connectionStatus);
-    }
 
     const name = document.createElement('h3');
     name.innerHTML = review.name;
@@ -163,6 +156,20 @@ const createReviewHTML = (review) => {
     li.appendChild(comments);
     
     return li;
+}
+
+const addNewReviewHtml = (newReview) => {
+    const li = createReviewHTML(newReview);
+
+    if (!navigator.onLine) {
+      const connectionStatus = document.createElement('div');
+      connectionStatus.classList.add('offline-label');
+      connectionStatus.innerHTML = 'Offline';
+      li.classList.add('review-offline');
+      li.appendChild(connectionStatus);
+    }
+    
+    document.getElementById('reviews-list').appendChild(li);
 }
 
 /* Add restaurant name to the breadcrumb navigation menu */
@@ -201,12 +208,11 @@ const getParameterByName = (name, url) => {
     let name = document.getElementById('review-author').value;
     let comments = document.getElementById('review-comments').value;
     let rating = document.querySelector('#select-rating option:checked').value; 
-    let errorField =  document.getElementById('form-error'); 
 
     const isValidated = name && comments;
 
     if (!isValidated) {
-      errorField.innerText = 'Please fill in the form!';
+      document.getElementById('form-error').innerText = 'Please fill in the form!';
       return;
     }
 
@@ -224,6 +230,6 @@ const getParameterByName = (name, url) => {
     console.log('From addReview, validatedReview is: ', validatedReview);
     //  send review to the server
     DBHelper.addReview(validatedReview);
-    // addReviewHtml(validatedReview);
+    addNewReviewHtml(validatedReview);
     document.getElementById('review-form').reset();
   }

@@ -611,6 +611,10 @@ class DBHelper {
   } 
 
   static addReview(review) {
+
+    // clear previous error messages:
+    document.getElementById('form-error').innerText = '';
+
     // create an object for offline storage:
     const offilineObject = {
       name: 'addReview',
@@ -669,8 +673,8 @@ class DBHelper {
       console.log('Browser: online again!');
       const data = JSON.parse(localStorage.getItem('data'));
       console.log('Updating and cleaning ui...');
-      [...document.querySelectorAll('.reviews-offline')].forEach(review => {
-        review.classList.remove('reviews-offline');
+      [...document.querySelectorAll('.review-offline')].forEach(review => {
+        review.classList.remove('review-offline');
         review.querySelector('.offline-label').remove();
       });
 

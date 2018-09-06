@@ -686,6 +686,10 @@ figure {
   box-shadow: 0 3px 6px -3px #BDBDBD;
 }
 
+#reviews-list li.review-offline {
+  box-shadow: 0 0px 7px 2px #f70d0d;
+}
+
 @media (min-width: 768px) {
   #reviews-list li {
     width: 80%;
@@ -772,4 +776,22 @@ figure {
   border: 1px solid #ced4da;
   border-radius: .25rem;
   line-height: 24px;
+}
+
+.review-offline {
+  box-shadow: 0 0px 7px 2px #f70d0d;
+}
+
+.offline-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  border: 1px solid #f70d0d;
+  background-color: #f70d0d;
+  width: auto;
+  letter-spacing: 1px;
+  font-weight: 700;
+  color: white;
+  padding: 5px 10px;
 }
