@@ -46,13 +46,10 @@ const fetchRestaurantFromURL = (callback) => {
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
-      console.log('From fetchRestaurantById, self.restaurant is: ', self.restaurant);
-      console.log('From fetchRestaurantById, restaurant is: ', restaurant);
       if (!restaurant) {
         console.error(error);
         return;
       }
-      DBHelper.fetchReviewsByRestaurantId(id);
       fillRestaurantHTML();
       callback(null, restaurant)
     });
@@ -88,8 +85,12 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
 
-  // fillReviewsHTML(DBHelper.fetchReviewsByRestaurantId(restaurant.id));
-  fillReviewsHTML(restaurant.id);
+  // fetch reviews and add them to IndexedDB:
+  const reviewsPromise = DBHelper.fetchReviewsByRestaurantId(restaurant.id);
+  reviewsPromise.then(function(reviews) {
+    console.log('From fillRestaurantHTML, reviews are: ', reviews);
+    fillReviewsHTML(reviews);
+  });
 }
 
 /**
@@ -113,27 +114,23 @@ const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hour
 }
 
 /* Create all reviews HTML and add them to the webpage.*/
-const fillReviewsHTML = (id) => {
+const fillReviewsHTML = (reviews) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
-  DBHelper.getStoredObjectById('reviews', 'restaurant', id)
-    .then(storedReviews => {
-      console.log('fetching reviews from idb...');
-      // Promise.resolve(storedReviews);
-      const ul = document.getElementById('reviews-list');
-      storedReviews.forEach(review => ul.appendChild(createReviewHTML(review)))
-      container.appendChild(ul);
-    })
-    .catch(err => {
-      console.log('Error fetching reviews from idb: ', err);
-      const noReviews = document.createElement('h2');
-      noReviews.innerHTML = 'No reviews yet!';
-      container.appendChild(noReviews);
-      return;
-    });
+  if (!reviews) {
+    const noReviews = document.createElement('p');
+    noReviews.innerHTML = 'No reviews yet!';
+    container.appendChild(noReviews);
+    return;
+  }
+  const ul = document.getElementById('reviews-list');
+  reviews.forEach(review => {
+    ul.appendChild(createReviewHTML(review));
+  });
+  container.appendChild(ul);
 }
 
 /* Create review HTML and add it to the webpage */

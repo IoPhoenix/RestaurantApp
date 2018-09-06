@@ -266,16 +266,12 @@ class DBHelper {
       const data = await fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`);
       const reviews = await data.json();
 
-      console.log('From fetchReviewsByRestaurantId, fetch request was successful!');
-      console.log('from fetchReviewsByRestaurantId, reviews are: ', reviews);
-
       this.dbPromise().then(db => {
           if (!db) return;
 
           // store reviews in IndexedDB:
           let tx = db.transaction('reviews', 'readwrite');
           const store = tx.objectStore('reviews');
-          console.log('From this.dbPromise, reviews are: ', reviews);
           if (Array.isArray(reviews)) {
             reviews.forEach(review => store.put(review));
           } else {
