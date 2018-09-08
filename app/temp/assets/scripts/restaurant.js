@@ -595,9 +595,9 @@ class DBHelper {
           // if offline, take reviews from IndexedDB:
           return DBHelper.getStoredObjectById('reviews', 'restaurant', id)
             .then(storedReviews => {
-              console('looking for offline stored reviews');
-              Promise.resolve(storedReviews);
-          })  
+              console.log('looking for offline stored reviews');
+              return Promise.resolve(storedReviews);
+          });
       }
   } 
 
@@ -774,7 +774,6 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   // fetch reviews and add them to IndexedDB:
   const reviewsPromise = DBHelper.fetchReviewsByRestaurantId(restaurant.id);
   reviewsPromise.then(function(reviews) {
-    console.log('From fillRestaurantHTML, reviews are: ', reviews);
     fillReviewsHTML(reviews);
   });
 }
@@ -903,7 +902,6 @@ const getParameterByName = (name, url) => {
     }
 
     const review = [name, restaurantId, rating, comments];  
-    console.log('From addReview, review is: ', review);
 
     const validatedReview = {
       restaurant_id: parseInt([review[1]]),
@@ -914,7 +912,8 @@ const getParameterByName = (name, url) => {
     }
 
     console.log('From addReview, validatedReview is: ', validatedReview);
-    //  send review to the server
+    
+    //  send review to the server and add new review to the website:
     DBHelper.addReview(validatedReview);
     addNewReviewHtml(validatedReview);
     document.getElementById('review-form').reset();

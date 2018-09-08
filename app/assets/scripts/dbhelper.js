@@ -279,9 +279,9 @@ class DBHelper {
           // if offline, take reviews from IndexedDB:
           return DBHelper.getStoredObjectById('reviews', 'restaurant', id)
             .then(storedReviews => {
-              console('looking for offline stored reviews');
-              Promise.resolve(storedReviews);
-          })  
+              console.log('looking for offline stored reviews');
+              return Promise.resolve(storedReviews);
+          });
       }
   } 
 
