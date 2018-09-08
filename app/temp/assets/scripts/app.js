@@ -329,10 +329,11 @@ if ('serviceWorker' in navigator) {
 
 
 class DBHelper {
-    static get DATABASE_URL() {
-      const port = 1337; // server port
-      return `http://localhost:${port}/`;
-    }
+
+  static get DATABASE_URL() {
+    const port = 1337; // server port
+    return `http://localhost:${port}/`;
+  }
   
     // handle relevant IndexedDB creation:
     static dbPromise() {
@@ -538,7 +539,7 @@ class DBHelper {
   static updateFavoriteStatus(restaurantId, isFavorite) {
     console.log('Updating status to: ', isFavorite);
 
-    fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {
+    fetch(`${DBHelper.DATABASE_URL}restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {
       method: 'PUT'
     })
     .then(() => {

@@ -196,6 +196,7 @@ header h1 a {
 
 /* ====================== Navigation ====================== */
 #menu-toggler {
+  margin: 0;
   transition: top .3s;
   height: 48px;
   width: 48px;
@@ -510,7 +511,7 @@ button:hover, button:focus {
 
 button.favorite-button {
   width: min-content;
-  bottom: -14.469px;
+  bottom: -18.469px;
   right: calc(50% - 22.5px);
   position: absolute;
   border: 2px solid white;
@@ -667,7 +668,6 @@ figure {
   font-weight: 400;
   font-family: "Poor Story", cursive;
   letter-spacing: -1px;
-  padding-bottom: 1pt;
 }
 
 #reviews-list {
@@ -713,7 +713,7 @@ figure {
 }
 
 #form-container {
-  padding: 30px 40px 100px;
+  padding: 30px 40px 120px;
 }
 
 #form-container h2 {
@@ -732,19 +732,24 @@ figure {
 
 #form-container #author-rating-container {
   display: flex;
+  justify-content: space-between;
 }
 
-#form-container #review-author-container {
-  flex: 2;
+@media (min-width: 992px) {
+  #form-container #review-author-container {
+    flex: 2;
+  }
 }
 
-#form-container #review-rating-container {
-  flex: 1;
+@media (min-width: 992px) {
+  #form-container #review-rating-container {
+    flex: 1;
+  }
 }
 
 #form-container #review-rating-container select {
-  height: 34px;
-  width: 25%;
+  height: 35px;
+  min-width: 40px;
 }
 
 #form-container #review-comments-container {
@@ -752,17 +757,25 @@ figure {
 }
 
 #form-container #review-comments-container #form-error {
-  color: #922123;
+  color: #f70d0d;
   font-weight: 700;
 }
 
-#form-container #review-comments,
+#form-container #review-comments {
+  width: 95%;
+}
+
+@media (min-width: 768px) {
+  #form-container #review-comments {
+    width: 70%;
+  }
+}
+
 #form-container #review-author {
   width: 100%;
 }
 
-@media (min-width: 480px) {
-  #form-container #review-comments,
+@media (min-width: 768px) {
   #form-container #review-author {
     width: 70%;
   }
