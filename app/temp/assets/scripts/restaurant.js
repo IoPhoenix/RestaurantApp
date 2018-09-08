@@ -365,7 +365,6 @@ class DBHelper {
         // if data is successfully returned from the server,
         // create new database and store data in it
        this.dbPromise()
-          .then(console.log('Database created!'))
           .then(db => {
             const tx = db.transaction('restaurants', 'readwrite');
             const restaurantsStore = tx.objectStore('restaurants');
@@ -373,7 +372,6 @@ class DBHelper {
             json.forEach(restaurant => restaurantsStore.put(restaurant));
             return tx.cemplete.then(() => Promise.resolve(json));
           })
-          .then(console.log('Added restaurants info to idb!'))
           .catch(err => console.log('Could not add restaurants to idb: ', err));
 
 
@@ -586,7 +584,6 @@ class DBHelper {
             store.put(reviews);
           }
         })
-        .then(console.log('Added reviews info to idb!'))
         .catch(err => console.log('Could not add reviews to idb: ', err));
 
         // Return the list of reviews:
@@ -727,7 +724,7 @@ const fetchRestaurantFromURL = (callback) => {
   }
   const id = getParameterByName('id');
   if (!id) { // no id found in URL
-    error = 'No restaurant id in URL'
+    const error = 'No restaurant id in URL'
     callback(error, null);
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
@@ -890,14 +887,17 @@ const getParameterByName = (name, url) => {
 
     event.preventDefault();
     let restaurantId = getParameterByName('id');
-    let name = document.getElementById('review-author').value;
-    let comments = document.getElementById('review-comments').value;
+    let name = document.getElementById('review-author');
+    let comments = document.getElementById('review-comments');
     let rating = document.querySelector('#select-rating option:checked').value; 
 
-    const isValidated = name && comments;
+    const nameIsValid = name.value !== '';
+    const commentsAreValid = comments.value !== '';
 
-    if (!isValidated) {
+    if (!nameIsValid || !commentsAreValid) {
       document.getElementById('form-error').innerText = 'Please fill in the form!';
+      name.setAttribute('aria-invalid', !nameIsValid);
+      comments.setAttribute('aria-invalid', !commentsAreValid);
       return;
     }
 
@@ -912,7 +912,7 @@ const getParameterByName = (name, url) => {
     }
 
     console.log('From addReview, validatedReview is: ', validatedReview);
-    
+
     //  send review to the server and add new review to the website:
     DBHelper.addReview(validatedReview);
     addNewReviewHtml(validatedReview);

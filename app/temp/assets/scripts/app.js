@@ -365,7 +365,6 @@ class DBHelper {
         // if data is successfully returned from the server,
         // create new database and store data in it
        this.dbPromise()
-          .then(console.log('Database created!'))
           .then(db => {
             const tx = db.transaction('restaurants', 'readwrite');
             const restaurantsStore = tx.objectStore('restaurants');
@@ -373,7 +372,6 @@ class DBHelper {
             json.forEach(restaurant => restaurantsStore.put(restaurant));
             return tx.cemplete.then(() => Promise.resolve(json));
           })
-          .then(console.log('Added restaurants info to idb!'))
           .catch(err => console.log('Could not add restaurants to idb: ', err));
 
 
@@ -586,7 +584,6 @@ class DBHelper {
             store.put(reviews);
           }
         })
-        .then(console.log('Added reviews info to idb!'))
         .catch(err => console.log('Could not add reviews to idb: ', err));
 
         // Return the list of reviews:
