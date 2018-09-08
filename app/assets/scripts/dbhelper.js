@@ -1,6 +1,5 @@
-/**
- * Common database helper functions.
- */
+
+/* Common database helper functions. */
 
  // register service worker
 if ('serviceWorker' in navigator) {
@@ -45,7 +44,6 @@ class DBHelper {
       try {
         const data = await fetch(`${DBHelper.DATABASE_URL}restaurants`);
         const json = await data.json();
-        console.log('restaurant data returned from server: ', json);
         callback(null, json);
         
         // if data is successfully returned from the server,
@@ -66,14 +64,15 @@ class DBHelper {
       } catch(err) {
         console.log('Error with the network, you are offline');
 
-         // if app is offline, fetch restaurants from the IndexedDB database:
-        idb.open('restaurants', 1).then(function(db) {
-          const tx = db.transaction(['restaurants'], 'readonly');
-          const store = tx.objectStore('restaurants');
+        // if app is offline, fetch restaurants from IndexedDB database:
+        this.dbPromise().then(db => {
+          if (!db) return;
+
+          const store = db.transaction('restaurants').objectStore('restaurants');
           return store.getAll();
-        }).then(function(restaurants) {
-            console.log('Data read from idb: ', restaurants);
-           callback(null, restaurants);
+        }).then(storedRestaurants => {
+            console.log('Data read from idb while offline: ', storedRestaurants);
+            callback(null, storedRestaurants);
         }).catch(error => callback(error, null));
       }
     }
@@ -87,7 +86,6 @@ class DBHelper {
           callback(error, null);
         } else {
           const restaurant = restaurants.find(r => r.id == id);
-          console.log("from fetchRestaurantById, restaurant is: ", restaurant);
           if (restaurant) { // Got the restaurant
             callback(null, restaurant);
           } else { // Restaurant does not exist in the database
@@ -325,7 +323,6 @@ class DBHelper {
 
     fetch(`${DBHelper.DATABASE_URL}reviews`, fetchOptions)
       .then(response => {
-        console.log('from addReview, response from server: ', response);
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.indexOf('application/json') !== -1) {
           return response.json();
@@ -333,7 +330,7 @@ class DBHelper {
           return 'API call successfull';
         }
       })
-      .then(data => console.log('Fetch successful'))
+      .then(data => console.log('Review was successfully sent to server!'))
       .catch(err => console.log(err));
   }
   
