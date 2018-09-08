@@ -155,8 +155,6 @@ const createRestaurantHTML = (restaurant) => {
   favorite.classList.add('favorite-button');
 
   favorite.addEventListener('click', () => {
-    console.log('fav button is clicked!');
-
     if (restaurant.is_favorite === 'false') {
       restaurant.is_favorite = false;
     } else if (restaurant.is_favorite === 'true') {
@@ -166,7 +164,6 @@ const createRestaurantHTML = (restaurant) => {
     const isFavorite = !restaurant.is_favorite;
 
     // send update to the server:
-    console.log('id of liked restaurant: ', restaurant.id);
     DBHelper.updateFavoriteStatus(restaurant.id, isFavorite);
     restaurant.is_favorite = !restaurant.is_favorite;
     changeFavoriteElementClass(favorite, restaurant.is_favorite);

@@ -340,21 +340,15 @@ class DBHelper {
       return idb.open('db', 2, function(upgradeDB) {
         switch(upgradeDB.oldVersion) {
           case 0:
-            console.log('upgradeDB.oldVersion: ', upgradeDB.oldVersion);
             upgradeDB.createObjectStore('restaurants', {
               keyPath: 'id'
             });
           case 1:
-            console.log('upgradeDB.oldVersion: ', upgradeDB.oldVersion);
             const reviewsStore = upgradeDB.createObjectStore('reviews', {
               keyPath: 'id'
             });
             // create an index for the reviews relative to restaurant ID
             reviewsStore.createIndex('restaurant', 'restaurant_id');
-          default:
-            console.log('upgradeDB.oldVersion: ', upgradeDB.oldVersion);
-            return;
-
         }
       })
     }
@@ -547,7 +541,6 @@ class DBHelper {
       // update data in IndexedDB:
       this.dbPromise()
         .then(db => {
-          console.log('From updateFavoriteStatus, db: ', db);
           const tx = db.transaction('restaurants', 'readwrite');
           const store = tx.objectStore('restaurants');
           store.get(restaurantId)
@@ -601,7 +594,6 @@ class DBHelper {
         // Return the list of reviews:
         return Promise.resolve(reviews);
       } catch(err) {
-          console.log('From fetchReviewsByRestaurantId, error: ', err);
           // if offline, take reviews from IndexedDB:
           return DBHelper.getStoredObjectById('reviews', 'restaurant', id)
             .then(storedReviews => {
@@ -852,8 +844,6 @@ const createRestaurantHTML = (restaurant) => {
   favorite.classList.add('favorite-button');
 
   favorite.addEventListener('click', () => {
-    console.log('fav button is clicked!');
-
     if (restaurant.is_favorite === 'false') {
       restaurant.is_favorite = false;
     } else if (restaurant.is_favorite === 'true') {
@@ -863,7 +853,6 @@ const createRestaurantHTML = (restaurant) => {
     const isFavorite = !restaurant.is_favorite;
 
     // send update to the server:
-    console.log('id of liked restaurant: ', restaurant.id);
     DBHelper.updateFavoriteStatus(restaurant.id, isFavorite);
     restaurant.is_favorite = !restaurant.is_favorite;
     changeFavoriteElementClass(favorite, restaurant.is_favorite);

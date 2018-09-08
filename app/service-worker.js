@@ -14,6 +14,7 @@ const filesToCache = [
     'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon.png',
     'https://fonts.gstatic.com/s/poppins/v5/pxiByp8kv8JHgFVrLEj6Z1xlEA.ttf',
     'https://fonts.gstatic.com/s/poorstory/v4/jizfREFUsnUct9P6cDfd0O6tKA.ttf',
+    'https://fonts.gstatic.com/s/poppins/v5/pxiEyp8kv8JHgFVrJJfedw.ttf',
     'assets/images/1_thumbnail.webp',
     'assets/images/1_extra-small.webp',
     'assets/images/1_medium.webp',
