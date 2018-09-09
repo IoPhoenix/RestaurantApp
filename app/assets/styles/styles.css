@@ -735,20 +735,20 @@ figure {
   justify-content: space-between;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   #form-container #review-author-container {
     flex: 2;
   }
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   #form-container #review-rating-container {
     flex: 1;
   }
 }
 
 #form-container #review-rating-container select {
-  height: 35px;
+  height: 38px;
   min-width: 40px;
 }
 
@@ -772,7 +772,7 @@ figure {
 }
 
 #form-container #review-author {
-  width: 100%;
+  width: 80%;
 }
 
 @media (min-width: 768px) {

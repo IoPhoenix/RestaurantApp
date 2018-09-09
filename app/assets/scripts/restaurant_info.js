@@ -218,7 +218,8 @@ const getParameterByName = (name, url) => {
       return;
     }
 
-    const review = [name, restaurantId, rating, comments];  
+    const review = [name.value, restaurantId, rating, comments.value];  
+    console.log('review is: ', review);
 
     const validatedReview = {
       restaurant_id: parseInt([review[1]]),

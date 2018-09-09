@@ -669,16 +669,16 @@ figure {
     justify-content: space-between;
   }
   #review-author-container {
-    @include desktop {
+    @include tablet {
       flex: 2;
     }
   }
   #review-rating-container {
-    @include desktop {
+    @include tablet {
       flex: 1;
     }
     select {
-      height: 35px;
+      height: 38px;
       min-width: 40px;
     }
   }
@@ -696,7 +696,7 @@ figure {
     }
   }
   #review-author {
-    width: 100%;
+    width: 80%;
     @include tablet {
       width: 70%;
     }

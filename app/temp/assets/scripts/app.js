@@ -837,17 +837,12 @@ const createRestaurantHTML = (restaurant) => {
   favorite.innerHTML = '❤';
   favorite.classList.add('favorite-button');
 
+  console.log('is_favorite before click: ', restaurant.is_favorite);
   favorite.addEventListener('click', () => {
-    if (restaurant.is_favorite === 'false') {
-      restaurant.is_favorite = false;
-    } else if (restaurant.is_favorite === 'true') {
-      restaurant.is_favorite = true;
-    }
-    
-    const isFavorite = !restaurant.is_favorite;
+    const isFavorite = (restaurant.is_favorite && restaurant.is_favorite.toString() === 'true') ? true : false;
 
     // send update to the server:
-    DBHelper.updateFavoriteStatus(restaurant.id, isFavorite);
+    DBHelper.updateFavoriteStatus(restaurant.id, !isFavorite);
     restaurant.is_favorite = !restaurant.is_favorite;
     changeFavoriteElementClass(favorite, restaurant.is_favorite);
   });
